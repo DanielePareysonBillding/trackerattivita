@@ -116,6 +116,33 @@ button.action-card .count,button.action-card .action-times strong{font-size:18px
  .table-wrap .time-wrap{gap:3px}
 }
 
+
+/* Compact centered current task and explicit metric labels. */
+.action-title{font-size:16px;line-height:1.2;letter-spacing:-.2px;font-weight:750}
+.group-heading h3{font-size:12px;letter-spacing:.65px}
+button.action-card .action-button{min-height:38px}
+button.action-card .counter,button.action-card .action-times{flex-direction:column;gap:2px;padding:5px 6px;min-height:43px}
+.action-metric-label{font-size:10px;font-weight:600;line-height:1.1;color:var(--muted);letter-spacing:.15px}
+.pause-metric{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.pause-metric .action-metric-label{color:#e6fff0;font-size:9px}
+.pause-button{gap:12px}
+.active-strip,.active-strip.running{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) minmax(0,1fr);align-items:center;gap:8px;width:100%;max-width:680px;margin:0 auto 9px;padding:7px 12px;min-height:42px}
+.active-strip.running{min-height:51px}
+.active-context{display:flex;align-items:center;gap:7px;min-width:0}
+.active-strip #active-status{font-size:11px;line-height:1.2;font-weight:600}
+.active-strip #active-name{grid-column:2;grid-row:1;text-align:center;font-size:23px;line-height:1.15;letter-spacing:-.5px;font-weight:780}
+.active-strip .active-elapsed{grid-column:3;grid-row:1;justify-self:end;margin:0;font-size:23px;line-height:1.1;text-align:right}
+.active-strip:not(.running){display:flex;justify-content:center}
+.active-strip:not(.running) #active-name,.active-strip:not(.running) .active-elapsed{display:none}
+@media(max-width:650px){
+ .action-title{font-size:14px}.group-heading h3{font-size:11px}
+ .active-strip.running{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:5px 8px}
+ .active-strip.running .active-context{grid-column:1/-1;grid-row:1;justify-content:center}
+ .active-strip.running #active-name{grid-column:1/-1;grid-row:2;text-align:center;font-size:20px;padding:0}
+ .active-strip.running .active-elapsed{grid-column:1/-1;grid-row:3;justify-self:center;text-align:center;font-size:21px}
+ .pause-button{gap:7px;min-width:0}
+}
+
 </style>
 </head>
 <body>
@@ -126,8 +153,8 @@ button.action-card .count,button.action-card .action-times strong{font-size:18px
 </header>
 <section class="hero"><div><h1>Registra le tue attività.</h1></div><div class="segmented" role="group" aria-label="Periodo visualizzato"><button class="segment active" data-period="today" aria-pressed="true">Oggi</button><button class="segment" data-period="all" aria-pressed="false">Tutto lo storico</button></div></section>
 <section class="operations-section" aria-labelledby="actions-heading">
- <div class="section-header"><h2 id="actions-heading">Registra attività</h2><div class="pause-wrap"><button type="button" id="card-pause" class="pause-button" aria-pressed="false" title="Registra una pausa"><svg viewBox="0 0 24 24"><path d="M9 5H6v14h3zM18 5h-3v14h3z"/></svg>Pausa <span class="pause-count" id="count-pause">0</span><span class="pause-time" id="pause-time">0h 00m</span></button><button class="tool end-button" id="end-day" type="button" disabled title="Interrompi il conteggio dell’attività in corso"><svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>Fine giornata</button></div></div>
- <div class="active-strip" id="active-strip"><span class="running-dot"></span><span id="active-status">Nessuna attività in corso</span><strong id="active-name"></strong><span class="active-elapsed" id="active-elapsed"></span></div>
+ <div class="section-header"><h2 id="actions-heading">Registra attività</h2><div class="pause-wrap"><button type="button" id="card-pause" class="pause-button" aria-pressed="false" title="Registra una pausa"><svg viewBox="0 0 24 24"><path d="M9 5H6v14h3zM18 5h-3v14h3z"/></svg>Pausa <span class="pause-metric"><span class="pause-count" id="count-pause">0</span><span class="action-metric-label">Registrazioni</span></span><span class="pause-metric"><span class="pause-time" id="pause-time">0h 00m</span><span class="action-metric-label">Tempo</span></span></button><button class="tool end-button" id="end-day" type="button" disabled title="Interrompi il conteggio dell’attività in corso"><svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>Fine giornata</button></div></div>
+ <div class="active-strip" id="active-strip"><span class="active-context"><span class="running-dot"></span><span id="active-status">Nessuna attività in corso</span></span><strong id="active-name"></strong><span class="active-elapsed" id="active-elapsed"></span></div>
  <div class="action-section"><div class="group-heading"><span class="group-marker support-marker"></span><h3>Attività principali</h3></div><div class="actions actions-primary" id="actions-primary"></div></div>
  <div class="action-section"><div class="group-heading"><span class="group-marker insert-marker"></span><h3>Altre attività</h3></div><div class="actions actions-secondary" id="actions-secondary"></div></div>
 </section>
@@ -254,7 +281,7 @@ const primaryActions=['consultant','customer','tech'];
 const secondaryActions=['insertion','backoffice','agency'];
 for(const def of [...primaryActions,...secondaryActions].map(id=>byId[id])){
  const card=document.createElement('button');card.type='button';card.className='action-card';card.id='card-'+def.id;card.style.setProperty('--accent',def.color);card.style.setProperty('--tint',def.tint);card.setAttribute('aria-label',`Registra ${def.label.toLowerCase()}`);
- card.innerHTML=`<span class="action-button"><span class="action-icon" aria-hidden="true"><svg viewBox="0 0 24 24">${def.icon}</svg></span><span class="action-plus" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span><span class="action-title">${def.label}</span><span class="action-group">${def.group}</span></span><span class="counter"><span class="count" id="count-${def.id}" title="Numero di attività">0</span></span><span class="action-times"><strong id="time-${def.id}" title="Tempo totale">0h 00m</strong></span>`;
+ card.innerHTML=`<span class="action-button"><span class="action-icon" aria-hidden="true"><svg viewBox="0 0 24 24">${def.icon}</svg></span><span class="action-plus" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span><span class="action-title">${def.label}</span><span class="action-group">${def.group}</span></span><span class="counter"><span class="count" id="count-${def.id}" title="Numero di attività">0</span><span class="action-metric-label">Registrazioni</span></span><span class="action-times"><strong id="time-${def.id}" title="Tempo totale">0h 00m</strong><span class="action-metric-label">Tempo</span></span>`;
  card.addEventListener('click',()=>register(def.id));$(primaryActions.includes(def.id)?'actions-primary':'actions-secondary').append(card);
 }
 $('card-pause').addEventListener('click',()=>register('pause'));
