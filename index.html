@@ -57,6 +57,31 @@
 @media(max-width:650px){.shell{padding:10px 12px}.hero{flex-direction:row;align-items:center;flex-wrap:wrap}h1{font-size:17px}.clock-time{font-size:22px}.brand-name{font-size:13px}.brand-sub{font-size:8px}.section-header{align-items:center}.pause-button{min-width:145px;min-height:38px}.actions-support{grid-template-columns:repeat(2,minmax(0,1fr))}.actions-insert .action-card{grid-template-columns:minmax(43px,.75fr) minmax(0,2.25fr)}.actions-insert .action-times{grid-template-columns:1fr 1fr}.actions-insert .action-share{grid-column:1/-1;text-align:left}.overview{grid-template-columns:repeat(2,minmax(0,1fr))}.metric:last-child{grid-column:auto}.histogram{grid-template-columns:repeat(2,minmax(40px,1fr)) 8px repeat(4,minmax(40px,1fr)) 8px minmax(40px,1fr) 8px minmax(40px,1fr)}.footer{gap:3px}.active-elapsed{margin-left:auto}}
 @media(min-width:1200px) and (min-height:900px){.shell{padding:18px 30px}.top{margin-bottom:12px}.section-divider{margin:13px 0}.action-button{min-height:43px;padding-left:10px}.action-times,.counter{padding-top:8px;padding-bottom:8px}.metric{padding:12px 16px}.viz-card{padding:12px 15px}}
 
+
+/* Simplified metrics: equal visual weight for count and duration. */
+.actions-insert{grid-template-columns:repeat(2,minmax(0,1fr))}
+.actions-support{grid-template-columns:repeat(4,minmax(0,1fr))}
+.action-card,.actions-insert .action-card{grid-template-columns:1fr 1fr}
+.counter{align-items:center;justify-content:center;padding:5px 6px;min-height:32px}
+.count,.action-times strong{font-size:18px;line-height:1.15;font-weight:750;letter-spacing:-.35px;font-variant-numeric:tabular-nums}
+.action-times,.actions-insert .action-times{display:flex;justify-content:center;align-items:center;padding:5px 6px;gap:0}
+.action-times strong{margin:0;color:var(--ink)}
+.pause-count,.pause-time{font-size:14px;font-weight:750;font-variant-numeric:tabular-nums}
+.overview{grid-template-columns:1fr 1fr 1fr 1.25fr}
+.histogram{grid-template-columns:minmax(40px,1fr) 9px repeat(4,minmax(40px,1fr)) 9px minmax(40px,1fr) 9px minmax(40px,1fr)}
+.hist-count{white-space:nowrap;font-variant-numeric:tabular-nums;font-size:9px}
+@media(max-width:650px){.actions-support,.overview{grid-template-columns:repeat(2,minmax(0,1fr))}.count,.action-times strong{font-size:17px}}
+
+/* Full-card interaction and equal-weight metrics. */
+button.action-card{width:100%;color:var(--ink);text-align:left;cursor:pointer;appearance:none;position:relative;align-content:stretch;grid-template-rows:1fr auto}
+button.action-card .action-button{pointer-events:none}
+button.action-card:active{background:var(--tint);transform:translateY(0)}
+button.action-card:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+button.action-card .counter,button.action-card .action-times{min-height:35px;padding:5px 6px;display:flex;align-items:center;justify-content:center}
+button.action-card .count,button.action-card .action-times strong{font-size:18px;font-weight:750;line-height:1.15;letter-spacing:-.35px;color:var(--accent);white-space:nowrap;font-variant-numeric:tabular-nums}
+.pause-count,.pause-time{font-size:14px;font-weight:750;line-height:1.15;color:white}
+@media(max-width:650px){button.action-card .count,button.action-card .action-times strong{font-size:17px}}
+
 </style>
 </head>
 <body>
@@ -67,16 +92,15 @@
 </header>
 <section class="hero"><div><h1>Registra le tue attività.</h1></div><div class="segmented" role="group" aria-label="Periodo visualizzato"><button class="segment active" data-period="today" aria-pressed="true">Oggi</button><button class="segment" data-period="all" aria-pressed="false">Tutto lo storico</button></div></section>
 <section class="operations-section" aria-labelledby="actions-heading">
- <div class="section-header"><h2 id="actions-heading">Registra attività</h2><div class="pause-wrap"><button type="button" id="card-pause" class="pause-button" aria-pressed="false" title="Registra una pausa"><svg viewBox="0 0 24 24"><path d="M9 5H6v14h3zM18 5h-3v14h3z"/></svg>Pausa <span class="pause-count" id="count-pause">0</span><span class="pause-time" id="pause-time">0 min</span></button><button class="tool end-button" id="end-day" type="button" disabled title="Interrompi il conteggio dell’attività in corso"><svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>Fine giornata</button></div></div>
+ <div class="section-header"><h2 id="actions-heading">Registra attività</h2><div class="pause-wrap"><button type="button" id="card-pause" class="pause-button" aria-pressed="false" title="Registra una pausa"><svg viewBox="0 0 24 24"><path d="M9 5H6v14h3zM18 5h-3v14h3z"/></svg>Pausa <span class="pause-count" id="count-pause">0</span><span class="pause-time" id="pause-time">0h 00m</span></button><button class="tool end-button" id="end-day" type="button" disabled title="Interrompi il conteggio dell’attività in corso"><svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>Fine giornata</button></div></div>
  <div class="active-strip" id="active-strip"><span class="running-dot"></span><span id="active-status">Nessuna attività in corso</span><strong id="active-name"></strong><span class="active-elapsed" id="active-elapsed"></span></div>
- <div class="action-section"><div class="group-heading"><span class="group-marker insert-marker"></span><h3>Gestione pratiche</h3></div><div class="actions actions-insert" id="actions-insert"></div></div>
- <div class="action-section"><div class="group-heading"><span class="group-marker support-marker"></span><h3>Supporto</h3></div><div class="actions actions-support" id="actions-support"></div></div>
+ <div class="action-section"><div class="group-heading"><span class="group-marker insert-marker"></span><h3>Gestione pratiche e clienti</h3></div><div class="actions actions-insert" id="actions-insert"></div></div>
+ <div class="action-section"><div class="group-heading"><span class="group-marker support-marker"></span><h3>Supporto operativo</h3></div><div class="actions actions-support" id="actions-support"></div></div>
 </section>
 <hr class="section-divider">
 <section class="overview" aria-label="Riepilogo attività">
- <div class="metric"><div class="metric-label"><svg viewBox="0 0 24 24"><path d="M4 19V5m0 14h16M8 15v-3m5 3V8m5 7V5"/></svg>Registrazioni totali</div><div class="metric-value" id="total">0</div><div class="metric-note" id="total-note">Nella giornata di oggi</div></div>
+ <div class="metric"><div class="metric-label"><svg viewBox="0 0 24 24"><path d="M4 19V5m0 14h16M8 15v-3m5 3V8m5 7V5"/></svg>Attività totali</div><div class="metric-value" id="total">0</div><div class="metric-note" id="total-note">Nella giornata di oggi</div></div>
  <div class="metric"><div class="metric-label"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M8 9h8m-8 5h8"/></svg>Inserimenti</div><div class="metric-value" id="insertions">0</div><div class="metric-note" id="insert-note">0% delle attività</div></div>
- <div class="metric"><div class="metric-label"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>Verifiche stato pratica</div><div class="metric-value" id="checks">0</div><div class="metric-note" id="check-note">0% delle attività</div></div>
  <div class="metric"><div class="metric-label"><svg viewBox="0 0 24 24"><path d="M4 13v-2a8 8 0 0 1 16 0v2M4 12H3v5h4v-5H4m16 0h1v5h-4v-5h3"/></svg>Supporto</div><div class="metric-value" id="support">0</div><div class="metric-note" id="support-note">0% delle attività</div></div>
  <div class="metric"><div class="metric-label"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Ultima attività</div><div class="metric-value metric-last" id="last-action">Nessuna attività</div><div class="metric-note" id="last-time">Inizia premendo un pulsante</div></div>
 </section>
@@ -84,10 +108,10 @@
 <section class="analytics" aria-labelledby="analytics-heading">
  <div class="analytics-header"><h2 id="analytics-heading">Analisi giornaliera</h2><label class="analytics-date-label" for="analytics-date">Giorno <input type="date" class="analytics-date" id="analytics-date"></label></div>
  <div class="analytics-grid">
-  <article class="viz-card"><div class="viz-top"><h3 class="viz-title">Distribuzione attività</h3><div class="segmented hist-mode" role="group" aria-label="Metrica istogramma"><button type="button" class="segment active" data-hist-mode="count" aria-pressed="true">Numero</button><button type="button" class="segment" data-hist-mode="time" aria-pressed="false">Tempo</button></div></div><p class="viz-sub" id="hist-sub">Numero di registrazioni e quota sul totale</p><div class="histogram" id="histogram" role="group" aria-label="Istogramma giornaliero"></div></article>
+  <article class="viz-card"><div class="viz-top"><h3 class="viz-title">Distribuzione attività</h3></div><p class="viz-sub" id="hist-sub">Tempo totale per attività</p><div class="histogram" id="histogram" role="group" aria-label="Istogramma giornaliero"></div></article>
   <article class="viz-card"><h3 class="viz-title">Timeline operativa</h3><p class="viz-sub">09:00 – 19:00 · Una corsia per ogni attività</p><div class="timeline-scroll"><div class="timeline" id="timeline" role="group" aria-label="Timeline attività giornaliera"></div></div><div class="timeline-empty" id="timeline-empty" hidden>Nessuna attività registrata nella fascia 09:00–19:00.</div><p class="timeline-note">Ogni attività dura fino al clic successivo o a Fine giornata. La timeline mostra solo la fascia 09:00–19:00. Le attività storiche senza orario di fine noto non contribuiscono ai tempi.</p></article>
  </div>
- <p class="duration-hint">I tempi totali includono l’attività in corso. Le medie considerano solo le attività concluse; le quote temporali includono anche le pause. Il conteggio continua a pagina chiusa fino alla prossima registrazione o Fine giornata, senza proseguire nel giorno successivo.</p>
+ <p class="duration-hint">I tempi totali includono l’attività in corso e le pause. Il conteggio continua a pagina chiusa fino alla prossima registrazione o Fine giornata, senza proseguire nel giorno successivo.</p>
 </section>
 <hr class="section-divider">
 <section class="log-card" aria-labelledby="log-heading">
@@ -114,7 +138,7 @@
 'use strict';
 const defs=[
  {id:'insertion',label:'Inserimento',group:'Inserimento',color:'#315fce',tint:'#eaf0ff',icon:'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8m-8 4h8m-8 4h5"/>'},
- {id:'verification',label:'Verifica stato pratica',group:'Verifica',color:'#6b49c6',tint:'#f0ebff',icon:'<circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5m-13-10 2 2 4-4"/>'},
+ {id:'verification',legacy:true,label:'Verifica stato pratica',group:'Verifica',color:'#6b49c6',tint:'#f0ebff',icon:'<circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5m-13-10 2 2 4-4"/>'},
  {id:'consultant',label:'Supporto Consulente',group:'Supporto',color:'#087f75',tint:'#e4f6f2',icon:'<path d="M4 13v-2a8 8 0 0 1 16 0v2M4 12H3v5h4v-5H4m16 0h1v5h-4v-5h3m0 5a4 4 0 0 1-4 4h-3"/>'},
  {id:'backoffice',label:'Supporto Back Office',group:'Supporto',color:'#a96514',tint:'#fff3df',icon:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V4h8v3M3 12h18m-11 0v2h4v-2"/>'},
  {id:'tech',label:'Supporto Ops/Tech',group:'Supporto',color:'#be4676',tint:'#fcebf3',icon:'<path d="m8 6-6 6 6 6m8-12 6 6-6 6M14 4l-4 16"/>'},
@@ -133,7 +157,7 @@ const clockFmt=timeFmt;
 const dateFmt=new Intl.DateTimeFormat('it-IT',{day:'2-digit',month:'2-digit',year:'numeric'});
 const longDateFmt=new Intl.DateTimeFormat('it-IT',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
 const numFmt=new Intl.NumberFormat('it-IT');
-let logs=[],period='today',lastDay=dayKey(new Date()),toastTimer,histMode='count',durationCells=new Map();
+let logs=[],period='today',lastDay=dayKey(new Date()),toastTimer,durationCells=new Map();
 function storageState(ok){$('storage-status').classList.toggle('error',!ok);$('storage-text').textContent=ok?'Salvataggio automatico su questo browser':'Salvataggio locale non disponibile: esporta il CSV prima di chiudere.';}
 function load(){try{const raw=localStorage.getItem(KEY);const value=raw?JSON.parse(raw):[];if(!Array.isArray(value))throw new Error('Dati non validi');logs=value.map(x=>x&&(x.action==='fast'||x.action==='slow')?{...x,legacyAction:x.action,action:'insertion'}:x).filter(x=>x&&Object.hasOwn(byId,x.action)&&typeof x.ts==='number'&&Number.isFinite(new Date(x.ts).getTime()));storageState(true);}catch(e){storageState(false);}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(logs));storageState(true);}catch(e){storageState(false);}}
@@ -143,7 +167,7 @@ function cell(row,text,cls){const td=document.createElement('td');td.textContent
 // Durations are derived from the chronologically ordered events, not stored independently.
 function calculate(entries,now=Date.now()){
  const sorted=[...entries].sort((a,b)=>a.ts-b.ts),durations=new Map();
- const stats=Object.fromEntries(defs.map(d=>[d.id,{count:0,total:0,closed:0,closedTime:0,unknown:0}]));
+ const stats=Object.fromEntries(defs.map(d=>[d.id,{count:0,total:0,unknown:0}]));
  let active=null,total=0,count=0;
  for(let i=0;i<sorted.length;i++){
   const e=sorted[i];if(e.action===END)continue;
@@ -153,25 +177,24 @@ function calculate(entries,now=Date.now()){
   else if(dayKey(e.ts)===dayKey(now)&&e.ts<=now){finish=now;running=true;active=e;}
   if(finish===null){st.unknown++;durations.set(e,{ms:null,end:null,running:false});continue;}
   const ms=Math.max(0,finish-e.ts);st.total+=ms;total+=ms;
-  if(!running){st.closed++;st.closedTime+=ms;}
   durations.set(e,{ms,end:finish,running});
  }
  return {sorted,durations,stats,active,total,count};
 }
 function durationText(ms){if(ms==null)return '—';if(ms===0)return '0 min';if(ms<60000)return '<1 min';const m=Math.floor(ms/60000),h=Math.floor(m/60);return h?`${h}h ${String(m%60).padStart(2,'0')}m`:`${m} min`;}
 const share=(n,total)=>total?Math.round(100*n/total):0;
+function hoursMinutes(ms){const m=Math.floor(ms/60000);return `${Math.floor(m/60)}h ${String(m%60).padStart(2,'0')}m`;}
 function updateTimeStats(now=Date.now()){
  const data=calculate(visibleLogs(),now),today=calculate(logs.filter(e=>dayKey(e.ts)===dayKey(now)),now),{stats,total,count}=data;
- for(const d of defs){const st=stats[d.id];$('count-'+d.id).textContent=numFmt.format(st.count);if(d.id==='pause'){$('pause-time').textContent=durationText(st.total);$('card-pause').title=`Pausa · Tempo totale: ${durationText(st.total)} · Media: ${durationText(st.closed?st.closedTime/st.closed:null)} · ${share(st.total,total)}% del tempo`;continue;}
-  $('time-'+d.id).textContent=durationText(st.total);$('avg-'+d.id).textContent=durationText(st.closed?st.closedTime/st.closed:null);$('share-'+d.id).textContent=share(st.total,total)+'% del tempo rilevato';$('card-'+d.id).classList.toggle('is-running',today.active?.action===d.id);
+ for(const d of defs.filter(d=>!d.legacy)){const st=stats[d.id];$('count-'+d.id).textContent=numFmt.format(st.count);if(d.id==='pause'){$('pause-time').textContent=hoursMinutes(st.total);$('card-pause').title=`Pausa · Tempo totale: ${hoursMinutes(st.total)}`;continue;}
+  $('time-'+d.id).textContent=hoursMinutes(st.total);$('card-'+d.id).classList.toggle('is-running',today.active?.action===d.id);
  }
- const ins=stats.insertion.count,insTime=stats.insertion.total,checks=stats.verification.count,checkTime=stats.verification.total;
+ const ins=stats.insertion.count,insTime=stats.insertion.total;
  const support=defs.filter(d=>d.group==='Supporto').reduce((a,d)=>a+stats[d.id].count,0),supportTime=defs.filter(d=>d.group==='Supporto').reduce((a,d)=>a+stats[d.id].total,0);
- $('total').textContent=numFmt.format(count);$('insertions').textContent=numFmt.format(ins);$('support').textContent=numFmt.format(support);$('checks').textContent=numFmt.format(checks);
- $('total-note').textContent=`${period==='today'?'Oggi':'Storico'} · ${durationText(total)} rilevati`;
- $('insert-note').textContent=`${share(ins,count)}% azioni · ${durationText(insTime)} · ${share(insTime,total)}% tempo`;
- $('check-note').textContent=`${share(checks,count)}% azioni · ${durationText(checkTime)} · ${share(checkTime,total)}% tempo`;
- $('support-note').textContent=`${share(support,count)}% azioni · ${durationText(supportTime)} · ${share(supportTime,total)}% tempo`;
+ $('total').textContent=numFmt.format(count);$('insertions').textContent=numFmt.format(ins);$('support').textContent=numFmt.format(support);
+ $('total-note').textContent=`${period==='today'?'Oggi':'Storico'} · ${hoursMinutes(total)} rilevati`;
+ $('insert-note').textContent=`${share(ins,count)}% azioni · ${hoursMinutes(insTime)}`;
+ $('support-note').textContent=`${share(support,count)}% azioni · ${hoursMinutes(supportTime)}`;
  for(const [e,td] of durationCells){const d=data.durations.get(e);td.textContent=e.action===END?'—':d?.ms==null?'Non nota':durationText(d.ms)+(d.running?' · In corso':'');td.classList.toggle('running',Boolean(d?.running));}
  const active=today.active,last=today.sorted.at(-1);$('active-strip').classList.toggle('running',!!active);$('active-status').textContent=active?'In corso · dalle '+timeFmt.format(active.ts):last?.action===END?'Giornata conclusa alle '+timeFmt.format(last.ts):'Nessuna attività in corso';$('active-name').textContent=active?byId[active.action].label:'';$('active-elapsed').textContent=active?durationText(now-active.ts):'';$('end-day').disabled=!active;$('card-pause').setAttribute('aria-pressed',String(active?.action==='pause'));
 }
@@ -193,24 +216,27 @@ $('edit-cancel').addEventListener('click',()=>$('edit-dialog').close());
 $('edit-dialog').addEventListener('close',()=>{editing=null;});
 $('edit-form').addEventListener('submit',e=>{e.preventDefault();if(!editing||!logs.includes(editing)){$('edit-dialog').close();return;}const [h,m]=$('edit-time').value.split(':').map(Number);if(!Number.isInteger(h)||!Number.isInteger(m)||h<0||h>23||m<0||m>59)return;const date=new Date(editing.ts);date.setHours(h,m,0,0);if(date.getTime()>Date.now()){toast('Non puoi impostare un orario futuro');return;}editing.ts=date.getTime();save();render();$('edit-dialog').close();toast('Orario aggiornato');});
 function register(action){logs.push({action,ts:Date.now()});save();render();$('table-wrap').scrollTop=0;const card=$('card-'+action);card.classList.remove('flash');void card.offsetWidth;card.classList.add('flash');setTimeout(()=>card.classList.remove('flash'),350);toast(byId[action].label+' · Registrato');}
-for(const def of defs.filter(x=>x.id!=='pause')){const card=document.createElement('article');card.className='action-card';card.id='card-'+def.id;card.style.setProperty('--accent',def.color);card.style.setProperty('--tint',def.tint);card.innerHTML=`<button class="action-button" type="button" aria-label="Registra ${def.label.toLowerCase()}"><span class="action-icon" aria-hidden="true"><svg viewBox="0 0 24 24">${def.icon}</svg></span><span class="action-plus" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span><span class="action-title">${def.label}</span><span class="action-group">${def.group}</span></button><div class="counter"><span class="count" id="count-${def.id}">0</span><span class="count-label">registrazioni</span></div><div class="action-times"><div>Tempo totale<strong id="time-${def.id}">0 min</strong></div><div>Tempo medio<strong id="avg-${def.id}">—</strong></div><div class="action-share" id="share-${def.id}">0% del tempo rilevato</div></div>`;card.querySelector('button').addEventListener('click',()=>register(def.id));$(def.group==='Supporto'?'actions-support':'actions-insert').append(card);}
+for(const def of defs.filter(x=>x.id!=='pause'&&!x.legacy)){
+ const card=document.createElement('button');card.type='button';card.className='action-card';card.id='card-'+def.id;card.style.setProperty('--accent',def.color);card.style.setProperty('--tint',def.tint);card.setAttribute('aria-label',`Registra ${def.label.toLowerCase()}`);
+ card.innerHTML=`<span class="action-button"><span class="action-icon" aria-hidden="true"><svg viewBox="0 0 24 24">${def.icon}</svg></span><span class="action-plus" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span><span class="action-title">${def.label}</span><span class="action-group">${def.group}</span></span><span class="counter"><span class="count" id="count-${def.id}" title="Numero di attività">0</span></span><span class="action-times"><strong id="time-${def.id}" title="Tempo totale">0h 00m</strong></span>`;
+ card.addEventListener('click',()=>register(def.id));$(def.id==='insertion'||def.id==='customer'?'actions-insert':'actions-support').append(card);
+}
 $('card-pause').addEventListener('click',()=>register('pause'));
 $('end-day').addEventListener('click',()=>{const now=Date.now();if(!calculate(logs.filter(e=>dayKey(e.ts)===dayKey(now)),now).active)return;logs.push({action:END,ts:now});save();render();toast('Giornata conclusa · Timer fermato');});
-const chartGroups=[['insertion','verification'],['consultant','backoffice','agency','customer'],['tech'],['pause']];
+const chartGroups=[['insertion'],['customer','consultant','backoffice','agency'],['tech'],['pause']];
 const chartDefs=chartGroups.flat().map(id=>byId[id]);
-const chartColumns={insertion:1,verification:2,consultant:4,backoffice:5,agency:6,customer:7,tech:9,pause:11};
+const chartColumns={insertion:1,customer:3,consultant:4,backoffice:5,agency:6,tech:8,pause:10};
 const chartGroupStarts=new Set(chartGroups.slice(1).map(group=>group[0]));
-const histLabels={insertion:['Inserimento'],verification:['Verifica','stato','pratica'],consultant:['Supporto','Consulente'],backoffice:['Supporto','Back','Office'],agency:['Supporto','Agenzie'],customer:['Supporto','Cliente'],tech:['Supporto','Ops/Tech'],pause:['Pausa']};
+const histLabels={insertion:['Inserimento'],consultant:['Supporto','Consulente'],backoffice:['Supporto','Back','Office'],agency:['Supporto','Agenzie'],customer:['Supporto','Cliente'],tech:['Supporto','Ops/Tech'],pause:['Pausa']};
 $('analytics-date').value=lastDay;
 $('analytics-date').max=lastDay;
 $('analytics-date').addEventListener('change',renderAnalytics);
-document.querySelectorAll('[data-hist-mode]').forEach(b=>b.addEventListener('click',()=>{histMode=b.dataset.histMode;document.querySelectorAll('[data-hist-mode]').forEach(x=>{x.classList.toggle('active',x===b);x.setAttribute('aria-pressed',String(x===b));});renderAnalytics();}));
 function renderAnalytics(){
  const selected=$('analytics-date').value||dayKey(new Date()),daily=logs.filter(x=>dayKey(x.ts)===selected),data=calculate(daily),{stats}=data;
- const useTime=histMode==='time',total=useTime?data.total:data.count,values=Object.fromEntries(defs.map(d=>[d.id,useTime?stats[d.id].total:stats[d.id].count])),max=Math.max(1,...Object.values(values));
- $('hist-sub').textContent=useTime?`${durationText(total)} rilevati · Quota sul tempo totale`:`${data.count} registrazioni · Quota sul totale giornaliero`;
+ const total=chartDefs.reduce((sum,d)=>sum+stats[d.id].total,0),max=Math.max(1,...chartDefs.map(d=>stats[d.id].total));
+ $('hist-sub').textContent=`${hoursMinutes(total)} · Tempo totale per attività`+(stats.verification.count?' · Verifiche precedenti conservate nei log':'');
  const bars=document.createDocumentFragment();
- for(const d of chartDefs){const n=values[d.id],pct=share(n,total),col=document.createElement('div');col.className='hist-col';col.style.gridColumn=chartColumns[d.id];col.style.setProperty('--bar',d.color);const label=useTime?durationText(n):String(n);col.title=`${d.label}: ${label} (${pct}%) · Media: ${durationText(stats[d.id].closed?stats[d.id].closedTime/stats[d.id].closed:null)}`;col.innerHTML=`<div class="hist-plot"><span class="hist-count"></span><div class="hist-bar" style="height:${n?Math.max(3,n/max*64):0}px"></div></div><span class="hist-label">${histLabels[d.id].map(part=>`<span>${part}</span>`).join('')}</span><span class="hist-share">${pct}%</span>`;col.querySelector('.hist-count').textContent=label;bars.append(col);}
+ for(const d of chartDefs){const n=stats[d.id].total,col=document.createElement('div');col.className='hist-col';col.style.gridColumn=chartColumns[d.id];col.style.setProperty('--bar',d.color);const label=hoursMinutes(n);col.title=`${d.label}: ${label}`;col.innerHTML=`<div class="hist-plot"><span class="hist-count"></span><div class="hist-bar" style="height:${n?Math.max(2,n/max*64):0}px"></div></div><span class="hist-label">${histLabels[d.id].map(part=>`<span>${part}</span>`).join('')}</span>`;col.querySelector('.hist-count').textContent=label;bars.append(col);}
  $('histogram').replaceChildren(bars);renderTimeline(data,selected);
 }
 function renderTimeline(data,selected){
