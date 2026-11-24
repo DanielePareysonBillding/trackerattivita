@@ -1,823 +1,328 @@
 <!doctype html>
 <html lang="it">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#101a2a">
-  <title>BILLDING | Messaggi Clienti</title>
-  <style>
-    :root { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #1c2a3c; background:#f5f7fb; font-synthesis:none; }
-    * { box-sizing: border-box; }
-    body { margin:0; min-height:100vh; }
-    header { background:#12243b; color:white; box-shadow:0 3px 15px #1027441b; }
-    .head { max-width:1040px; padding:24px 22px; margin:auto; display:flex; align-items:center; gap:14px; }
-    .logo { height:44px; width:44px; border-radius:12px; display:grid; place-items:center; background:#294864; font-size:24px; }
-    h1 { font-size:19px; margin:0; letter-spacing:.3px; }
-    .subtitle { font-size:12px; opacity:.75; margin-top:3px; letter-spacing:1.2px; }
-    main { max-width:1040px; margin:35px auto; padding:0 22px 48px; }
-    .panel { background:white; border:1px solid #e1e7ef; border-radius:16px; padding:25px; box-shadow:0 8px 32px #16283c0a; }
-    .section { margin-bottom:25px; }
-    .section:last-child { margin-bottom:0; }
-    .step { color:#69778a; font-size:12px; font-weight:750; letter-spacing:1.2px; margin:0 0 13px; }
-    .choices { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
-    .choices.categories { grid-template-columns:repeat(3,minmax(0,1fr)); }
-    .choices.questions { grid-template-columns:repeat(2,minmax(0,1fr)); }
-    .choices.ko { grid-template-columns:repeat(2,minmax(0,1fr)); }
-    .choice { min-height:88px; border:1px solid #dce4ee; background:#f9fbfe; border-radius:12px; color:#283a51; padding:15px 10px; font:inherit; font-size:18px; font-weight:750; cursor:pointer; transition: border-color .15s,background .15s,transform .15s; }
-    .choice:hover { border-color:#3b75d1; background:#f0f6ff; transform:translateY(-1px); }
-    .choice:focus-visible,.copy:focus-visible,.reset:focus-visible { outline:3px solid #89b8ff; outline-offset:2px; }
-    .choice.active { color:#205cb4; border-color:#3977da; background:#ecf4ff; }
-    .choice-icon { font-size:30px; display:block; margin-bottom:9px; }
-    .categories .choice { overflow-wrap:anywhere; }
-    .ko .choice { min-height:77px; }
-    .questions .choice { min-height:110px; line-height:1.35; }
-    .operator-choice { font-size:20px; min-height:75px; }
-    .supplier-choice { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:11px; }
-    .supplier-logo { width:min(100%,140px); height:44px; object-fit:contain; display:block; }
-    .supplier-label { font-size:17px; letter-spacing:.35px; }
-    .supplier-choice.logo-failed .supplier-logo { display:none; }
-    .supplier-choice.logo-failed .supplier-label { font-size:18px; }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f5f6fa">
+<title>Activity Tracker | Operations</title>
+<style>
+:root{--bg:#f5f6fa;--surface:#fff;--ink:#182238;--muted:#68758a;--line:#e4e8f0;--navy:#182238;--shadow:0 5px 24px rgba(27,40,70,.055);--radius:18px;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg);font-synthesis:none}*{box-sizing:border-box}body{margin:0;min-width:300px}button{font:inherit;cursor:pointer}button:focus-visible{outline:3px solid #477aff;outline-offset:3px}button:disabled{opacity:.45;cursor:default}svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}.shell{max-width:1320px;margin:auto;padding:32px 42px 28px}.top{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-bottom:34px}.brand{display:flex;align-items:center;gap:13px}.brand-icon{height:44px;width:44px;border-radius:13px;background:#263753;display:grid;place-items:center;color:white;box-shadow:0 5px 13px #26375324}.brand-icon svg{width:25px;height:25px}.brand-name{font-size:17px;font-weight:750;letter-spacing:-.5px}.brand-sub{font-size:11px;letter-spacing:1.7px;font-weight:650;color:var(--muted);text-transform:uppercase;margin-top:3px}.clock{display:flex;align-items:center;gap:14px;text-align:right}.live{display:inline-flex;align-items:center;gap:7px;color:#197c60;font-size:11px;font-weight:750;letter-spacing:.8px}.live-dot{height:8px;width:8px;background:#28b789;border-radius:50%;box-shadow:0 0 0 4px #28b7891c;animation:pulse 2.5s infinite}.clock-time{font-size:32px;line-height:1.05;font-weight:720;letter-spacing:-1.6px;font-variant-numeric:tabular-nums}.clock-date{font-size:12px;color:var(--muted);margin-top:6px;text-transform:capitalize}@keyframes pulse{50%{box-shadow:0 0 0 7px #28b78908}}.hero{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:22px}.eyebrow{font-weight:750;letter-spacing:1.6px;font-size:11px;text-transform:uppercase;color:#64728b;margin-bottom:9px}h1{font-size:clamp(28px,4vw,40px);line-height:1.12;letter-spacing:-1.8px;margin:0 0 8px;font-weight:780}.subtitle{font-size:14px;line-height:1.6;color:var(--muted);margin:0}.segmented{display:flex;gap:3px;background:#e9edf4;border-radius:12px;padding:4px;flex-shrink:0}.segment{border:0;background:transparent;color:#59677d;border-radius:9px;padding:9px 14px;font-size:12px;font-weight:700;white-space:nowrap}.segment.active{background:#fff;box-shadow:0 1px 5px #18223813;color:var(--ink)}.overview{display:grid;grid-template-columns:1fr 1.3fr 1.25fr;gap:1px;background:#36445a;border:1px solid #36445a;border-radius:var(--radius);overflow:hidden;box-shadow:0 6px 18px #25344c12;margin-bottom:32px;color:white}.metric{background:#24334c;padding:23px 25px;min-width:0}.metric-label{color:#b8c4d7;font-size:11px;text-transform:uppercase;letter-spacing:1px;font-weight:650;display:flex;align-items:center;gap:8px}.metric-label svg{width:15px;height:15px}.metric-value{font-size:35px;line-height:1.1;font-weight:730;letter-spacing:-1.3px;margin-top:13px;font-variant-numeric:tabular-nums}.metric-note{font-size:12px;color:#b8c4d7;margin-top:7px;line-height:1.4}.metric-last{font-size:19px;letter-spacing:-.4px;line-height:1.25;overflow-wrap:anywhere}.section-header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:15px}.section-header h2{margin:0;font-size:19px;letter-spacing:-.55px;font-weight:750}.section-hint{font-size:12px;color:var(--muted)}.actions{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:13px;margin-bottom:32px}.action-card{--accent:#3967d9;--tint:#edf2ff;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:0;min-width:0;overflow:hidden;box-shadow:var(--shadow);transition:border-color .18s,transform .18s,box-shadow .18s}.action-card:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 9px 22px #1b284611}.action-card.flash{border-color:var(--accent);box-shadow:0 0 0 3px var(--tint)}.action-button{display:flex;flex-direction:column;align-items:flex-start;width:100%;min-height:155px;padding:17px 16px 14px;border:0;background:none;color:var(--ink);text-align:left;position:relative}.action-button:active{background:var(--tint)}.action-icon{width:42px;height:42px;border-radius:12px;background:var(--tint);color:var(--accent);display:grid;place-items:center;margin-bottom:13px}.action-icon svg{width:23px;height:23px}.action-title{font-size:15px;line-height:1.3;font-weight:750;letter-spacing:-.3px;overflow-wrap:anywhere}.action-group{font-size:10px;font-weight:650;color:var(--muted);letter-spacing:.7px;text-transform:uppercase;margin-top:5px}.action-plus{position:absolute;right:14px;top:20px;width:23px;height:23px;color:var(--accent);background:var(--tint);border-radius:50%;display:grid;place-items:center}.action-plus svg{width:14px;height:14px;stroke-width:2}.counter{margin:0 15px;padding:14px 1px 16px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:7px}.count{font-size:31px;line-height:1;font-variant-numeric:tabular-nums;font-weight:750;letter-spacing:-1px;color:var(--accent)}.count-label{color:var(--muted);font-size:11px;line-height:1.2}.log-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}.log-head{display:flex;align-items:center;justify-content:space-between;padding:19px 21px;gap:14px;flex-wrap:wrap}.log-head h2{font-size:19px;letter-spacing:-.5px;margin:0;font-weight:750}.log-sub{font-size:12px;color:var(--muted);margin-top:5px}.log-tools{display:flex;gap:8px;flex-wrap:wrap}.tool{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:9px 11px;border-radius:9px;background:white;border:1px solid var(--line);color:#40516b;font-size:12px;font-weight:650;white-space:nowrap}.tool svg{width:15px;height:15px}.tool:hover:not(:disabled){background:#f1f4f9;border-color:#c7d0df}.tool.primary{background:#263753;border-color:#263753;color:white}.tool.primary:hover:not(:disabled){background:#374b6b}.tool.danger:hover:not(:disabled){background:#fff0f0;color:#b53838;border-color:#f0c6c6}.table-wrap{overflow-x:auto;max-height:470px;overflow-y:auto;border-top:1px solid var(--line)}table{border-collapse:collapse;width:100%;text-align:left;white-space:nowrap}thead{position:sticky;top:0;z-index:1;background:#f9fafc}th{padding:12px 21px;font-size:10px;font-weight:750;text-transform:uppercase;letter-spacing:1px;color:#69778d;border-bottom:1px solid var(--line)}td{padding:13px 21px;border-bottom:1px solid #edf0f5;font-size:13px}tbody tr:last-child td{border-bottom:0}tbody tr:hover{background:#fafbfe}.time-cell{font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:.1px}.date-cell{color:var(--muted);font-variant-numeric:tabular-nums}.id-cell{color:#8a97aa;font-size:11px;font-variant-numeric:tabular-nums}.action-tag{display:inline-flex;gap:8px;align-items:center;font-size:12px;font-weight:650}.tag-dot{height:9px;width:9px;border-radius:3px;background:var(--accent)}.category-cell{color:var(--muted);font-size:12px}.empty{padding:40px 20px 45px;text-align:center;color:var(--muted)}.empty-icon{margin:0 auto 11px;width:46px;height:46px;border-radius:13px;background:#f0f3f9;display:grid;place-items:center;color:#8290a6}.empty strong{display:block;color:#43526a;font-size:14px;margin-bottom:5px}.empty span{font-size:12px}.footer{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:17px;color:var(--muted);font-size:11px;line-height:1.5}.storage-status{display:flex;align-items:center;gap:6px}.storage-status svg{width:14px;height:14px;color:#259674}.storage-status.error{color:#b53838}.storage-status.error svg{color:#b53838}.toast{position:fixed;right:22px;bottom:22px;max-width:calc(100vw - 44px);background:#24334c;color:#fff;border:1px solid #43536c;padding:13px 17px;border-radius:13px;box-shadow:0 8px 30px #1b284633;display:flex;align-items:center;gap:10px;font-size:13px;z-index:10;opacity:0;transform:translateY(12px);pointer-events:none;transition:opacity .2s,transform .2s}.toast.show{opacity:1;transform:translateY(0)}.toast svg{color:#76e3b9}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}[hidden]{display:none!important}@media(max-width:1050px){.shell{padding:26px 26px}.actions{grid-template-columns:repeat(3,minmax(0,1fr))}.action-button{min-height:130px}}@media(max-width:650px){.shell{padding:20px 15px}.top{margin-bottom:26px;gap:10px}.brand{gap:8px}.brand-icon{width:35px;height:35px}.brand-icon svg{width:20px;height:20px}.brand-name{font-size:14px}.brand-sub{font-size:9px;letter-spacing:.8px}.clock{gap:6px}.live{display:none}.clock-time{font-size:25px}.clock-date{font-size:10px}.hero{align-items:flex-start;flex-direction:column;gap:15px;margin-bottom:16px}.overview{grid-template-columns:1fr 1fr;margin-bottom:25px}.metric{padding:17px 15px}.metric:last-child{grid-column:1/-1}.metric-value{font-size:29px}.metric-last{font-size:17px}.actions{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:25px}.action-button{min-height:134px;padding:13px}.action-plus{right:11px;top:14px}.counter{margin:0 12px}.section-hint{font-size:11px;text-align:right}.log-head{padding:15px}.log-tools{gap:5px}.tool{padding:8px;font-size:11px}th,td{padding:12px 15px}.footer{flex-direction:column;align-items:flex-start}.toast{bottom:15px;right:15px}}@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 
-    .choices.subchoices { grid-template-columns:repeat(2,minmax(0,1fr)); }
-    .choices.subchoices.credit-providers { grid-template-columns:repeat(4,minmax(0,1fr)); }
-    .credit-providers .choice { min-height:74px; }
-    .sectionhead { display:flex; justify-content:space-between; align-items:center; gap:12px; }
-    .reset { border:0; background:transparent; padding:7px; color:#64748b; font:inherit; font-size:15px; font-weight:600; cursor:pointer; }
-    .reset:hover { color:#1657a5; }
-    .message { border:1px solid #dfe5ee; border-radius:12px; padding:19px; margin-top:12px; }
-    .message h3 { margin:0 0 13px; font-size:15px; }
-    .message p { white-space:pre-wrap; overflow-wrap:anywhere; margin:0; padding:17px; font-size:14px; line-height:1.65; background:#f5f7fb; border-radius:9px; }
-    .actions { display:flex; justify-content:flex-end; margin-top:14px; }
-    .copy { border:0; background:#2563bd; color:#fff; font:inherit; font-size:16px; font-weight:750; border-radius:9px; padding:11px 16px; cursor:pointer; }
-    .copy:hover { background:#164c98; }
-    .copy.copied { background:#187851; }
-    .empty { color:#7a8492; font-style:italic; background:#f5f7fb; border-radius:9px; padding:17px; }
-    .intro { color:#8491a2; text-align:center; padding:38px 8px; font-size:14px; }
-    .certificate-fields { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; margin-bottom:16px; }
-    .certificate-fields label { display:flex; flex-direction:column; gap:7px; font-size:12px; font-weight:750; color:#526176; letter-spacing:.4px; }
-    .certificate-fields input, .certificate-fields select { width:100%; min-width:0; border:1px solid #cad5e3; border-radius:9px; font:inherit; font-weight:500; font-size:15px; letter-spacing:normal; padding:11px 10px; color:#1c2a3c; background:white; }
-    .certificate-fields input:focus, .certificate-fields select:focus { outline:2px solid #89b8ff; border-color:#2563bd; }
-    @media(max-width:800px) { .certificate-fields { grid-template-columns:repeat(2,minmax(0,1fr)); } }
-    @media(max-width:450px) { .certificate-fields { grid-template-columns:repeat(2,minmax(0,1fr)); } }
-    .note { margin-top:17px; font-size:12px; color:#7a8492; line-height:1.5; }
-    [hidden] { display:none!important; }
-    @media(max-width:650px) { .head { padding:19px 16px; } main { margin:20px auto; padding:0 12px 35px; } .panel { padding:17px; } .choices { gap:8px; } .choice { min-height:90px; font-size:15px; padding:12px 5px; } .choices.categories { grid-template-columns:repeat(2,minmax(0,1fr)); } .choices.questions { grid-template-columns:1fr; } .operator-choice { font-size:17px; } .choices.ko { grid-template-columns:1fr 1fr; } .choices.subchoices { grid-template-columns:1fr; } .choices.subchoices.credit-providers { grid-template-columns:repeat(2,minmax(0,1fr)); } h1 { font-size:17px; } }
-  </style>
+/* Grouped action layout and row editing */
+.action-section{margin-bottom:19px}.group-heading{display:flex;align-items:center;gap:8px;margin:0 0 9px}.group-heading h3{margin:0;font-size:12px;font-weight:750;color:#59677d;letter-spacing:.9px;text-transform:uppercase}.group-marker{width:8px;height:8px;border-radius:3px}.insert-marker{background:#5275db}.support-marker{background:#239784}.actions{margin-bottom:0;gap:12px}.actions-insert{grid-template-columns:repeat(2,minmax(0,1fr))}.actions-support{grid-template-columns:repeat(5,minmax(0,1fr))}.action-button{min-height:103px;padding:13px 15px 12px}.action-icon{width:35px;height:35px;margin-bottom:8px}.action-icon svg{width:20px;height:20px}.action-group{display:none}.action-plus{top:15px}.counter{padding:10px 1px 12px}.count{font-size:28px}.overview{grid-template-columns:1fr 1fr 1fr 1.35fr;margin:25px 0 26px}.metric{padding:17px 20px}.metric-value{margin-top:8px;font-size:32px}.metric-last{font-size:17px}.time-wrap{display:inline-flex;align-items:center;gap:9px}.row-button{border:1px solid transparent;background:transparent;color:#7a879c;display:inline-grid;place-items:center;width:30px;height:30px;border-radius:8px;padding:0;transition:background .15s,color .15s}.row-button svg{width:16px;height:16px}.row-button.edit:hover{color:#315fce;background:#eaf0ff;border-color:#d9e4ff}.row-button.delete:hover{color:#b53838;background:#fff0f0;border-color:#f0c6c6}.row-controls{text-align:right;width:1%;padding-left:5px}.table-wrap td{padding-top:8px;padding-bottom:8px}dialog{border:1px solid var(--line);border-radius:18px;padding:25px;width:min(390px,calc(100vw - 32px));color:var(--ink);box-shadow:0 15px 65px #18223838}dialog::backdrop{background:#18223870;backdrop-filter:blur(3px)}dialog h2{font-size:21px;margin:0 0 8px;letter-spacing:-.5px}dialog p{font-size:13px;color:var(--muted);margin:0 0 22px}dialog label{display:block;font-size:12px;font-weight:700;margin-bottom:8px}dialog input{width:100%;font:inherit;font-size:24px;color:var(--ink);border:1px solid var(--line);border-radius:9px;padding:9px 12px;font-variant-numeric:tabular-nums}dialog input:focus{outline:2px solid #6385d7;outline-offset:2px}.dialog-buttons{display:flex;justify-content:flex-end;gap:8px;margin-top:22px}
+@media(max-width:1050px){.actions-support{grid-template-columns:repeat(5,minmax(0,1fr))}.action-title{font-size:13px}.action-button{padding:12px;min-height:108px}.overview{grid-template-columns:repeat(4,minmax(0,1fr))}.metric{padding:15px 12px}}@media(max-width:760px){.actions-support{grid-template-columns:repeat(3,minmax(0,1fr))}.overview{grid-template-columns:repeat(2,minmax(0,1fr))}.metric:last-child{grid-column:auto}.action-title{font-size:14px}}@media(max-width:480px){.actions-support{grid-template-columns:repeat(2,minmax(0,1fr))}.actions{gap:9px}.action-button{min-height:108px}.metric-label{font-size:10px}.metric-last{font-size:16px}}
+
+/* Daily analytics */
+.pause-wrap{display:flex;align-items:center;gap:8px;flex-shrink:0}.pause-button{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid #d5dce7;color:#526178;border-radius:10px;padding:8px 11px;font-size:12px;font-weight:700;box-shadow:var(--shadow)}.pause-button:hover,.pause-button.flash{background:#e9edf3;border-color:#a1adbe}.pause-button svg{width:17px;height:17px}.pause-count{font-variant-numeric:tabular-nums;background:#edf0f5;border-radius:6px;padding:3px 7px;color:#526178}.pause-button[aria-pressed=true]{background:#e8ecf2;border-color:#8795a8}.analytics{margin-bottom:24px}.analytics-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}.analytics-header h2{font-size:19px;letter-spacing:-.5px;margin:0}.analytics-date{font:inherit;font-size:12px;color:#40516b;padding:7px 9px;background:white;border:1px solid var(--line);border-radius:8px;max-width:140px}.analytics-grid{display:grid;grid-template-columns:minmax(0, .85fr) minmax(0,1.65fr);gap:13px}.viz-card{min-width:0;background:white;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 18px}.viz-title{font-size:14px;font-weight:750;margin:0 0 4px}.viz-sub{font-size:11px;color:var(--muted);margin:0 0 14px;line-height:1.45}.histogram{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:5px;align-items:end;min-height:166px}.hist-col{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0}.hist-plot{height:112px;width:100%;display:flex;justify-content:flex-end;align-items:center;flex-direction:column;gap:4px;background:repeating-linear-gradient(to top,#edf0f5 0 1px,transparent 1px 28px);border-bottom:1px solid #dce2ec}.hist-count{font-size:11px;font-weight:750;font-variant-numeric:tabular-nums;color:#40516b}.hist-bar{width:65%;max-width:30px;border-radius:5px 5px 0 0;background:var(--bar);flex-shrink:0;transition:height .2s}.hist-label{font-size:10px;line-height:1.1;text-align:center;white-space:nowrap;color:#526178}.hist-share{font-size:10px;color:#8490a2;font-variant-numeric:tabular-nums}.timeline-scroll{overflow-x:auto}.timeline{min-width:465px;display:grid;grid-template-columns:100px minmax(0,1fr);column-gap:9px;row-gap:5px;align-items:center}.timeline-axis{position:relative;height:15px;margin-bottom:2px}.axis-tick{position:absolute;top:0;font-size:9px;color:#79869a;white-space:nowrap;transform:translateX(-50%);font-variant-numeric:tabular-nums}.axis-tick:first-child{transform:none}.axis-tick:last-child{transform:translateX(-100%)}.timeline-label{font-size:11px;color:#46566e;display:flex;align-items:center;gap:6px;white-space:nowrap}.timeline-label i{width:7px;height:7px;border-radius:2px;flex-shrink:0;background:var(--bar)}.timeline-track{height:17px;position:relative;background:repeating-linear-gradient(to right,#e1e6ef 0 1px,transparent 1px 10%),#f6f8fb;border-right:1px solid #e1e6ef;border-radius:3px;overflow:hidden}.timeline-block{position:absolute;top:3px;height:11px;min-width:3px;background:var(--bar);border-radius:3px;opacity:.93}.timeline-now{position:absolute;top:0;bottom:0;width:1px;background:#253753;opacity:.65;pointer-events:none;z-index:2}.timeline-note{margin:10px 0 0;font-size:10px;color:var(--muted);line-height:1.45}.timeline-empty{color:var(--muted);font-size:11px;margin-top:8px}.analytics-date-label{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:7px}.analytics-date-label input{min-width:0}@media(max-width:1000px){.analytics-grid{grid-template-columns:1fr}.histogram{gap:12px}.hist-bar{max-width:44px}}@media(max-width:480px){.viz-card{padding:14px 12px}.histogram{gap:3px}.hist-label{font-size:9px}.section-header .section-hint{display:none}.analytics-date-label{font-size:0}.analytics-header h2{font-size:17px}}
+
+/* Compact activity clusters, shared order across both daily charts */
+.analytics-grid{grid-template-columns:minmax(0,1.12fr) minmax(0,1.4fr)}
+.histogram{grid-template-columns:repeat(2,minmax(47px,1fr)) 13px repeat(4,minmax(47px,1fr)) 13px minmax(47px,1fr) 13px minmax(47px,1fr);gap:2px;overflow-x:auto;align-items:end;padding-bottom:4px}
+.hist-col{gap:4px}.hist-label{white-space:normal;overflow-wrap:normal;font-size:10px;line-height:1.2;height:36px;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center}.hist-label span{display:block}.hist-bar{width:78%;max-width:36px}
+.timeline{grid-template-columns:137px minmax(0,1fr);row-gap:2px;column-gap:8px;min-width:490px}.timeline-label{font-size:10.5px}.timeline-label.group-start,.timeline-track.group-start{margin-top:10px}.timeline-track{height:16px}.timeline-block{top:2px;height:12px}
+@media(max-width:1100px){.analytics-grid{grid-template-columns:1fr}.hist-bar{max-width:48px}.histogram{grid-template-columns:repeat(2,minmax(47px,1fr)) 18px repeat(4,minmax(47px,1fr)) 18px minmax(47px,1fr) 18px minmax(47px,1fr)}}
+@media(max-width:480px){.histogram{grid-template-columns:repeat(2,minmax(47px,1fr)) 12px repeat(4,minmax(47px,1fr)) 12px minmax(47px,1fr) 12px minmax(47px,1fr);gap:2px}.hist-label{font-size:10px}}
+
+/* Time allocation */
+.action-card.is-running{border-color:var(--accent);box-shadow:0 0 0 2px var(--tint)}
+.action-card.is-running .action-plus{background:var(--accent);color:white}
+.action-times{border-top:1px solid var(--line);margin:0 15px;padding:10px 0 13px;display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:11px;color:var(--muted)}
+.action-times strong{display:block;font-size:14px;color:var(--ink);margin-top:4px;font-variant-numeric:tabular-nums}.action-share{grid-column:1/-1;font-size:10px}
+.pause-wrap{flex-wrap:wrap;justify-content:flex-end}.pause-time{font-size:10px;font-weight:600;color:var(--muted);white-space:nowrap}
+.end-button{font-size:12px}.active-strip{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 17px;background:white;border:1px solid var(--line);border-radius:12px;padding:11px 14px;color:var(--muted);font-size:12px}.active-strip strong{color:var(--ink)}.active-strip .running-dot{width:8px;height:8px;border-radius:50%;background:#a6afbd}.active-strip.running .running-dot{background:#28b789;box-shadow:0 0 0 4px #28b78919}.active-elapsed{margin-left:auto;font-weight:750;color:var(--ink);font-variant-numeric:tabular-nums}.duration-cell{font-variant-numeric:tabular-nums;font-weight:650}.duration-cell.running{color:#087f75}.end-row{background:#f5f7fa}.viz-top{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:6px}.viz-top .viz-title{margin:0}.hist-mode .segment{padding:5px 8px;font-size:10px}.duration-hint{font-size:11px;line-height:1.5;color:var(--muted);margin:10px 0 0}.hist-count{white-space:nowrap;font-size:10px}.hist-label{font-size:10px}.metric-note{line-height:1.5}
+@media(max-width:650px){.section-header{align-items:flex-start;flex-wrap:wrap}.pause-wrap{justify-content:flex-start}.action-times{margin:0 12px}.action-times strong{font-size:12px}.active-strip{gap:8px}.active-elapsed{margin-left:0}.hist-mode .segment{padding:6px 9px}}
+
+/* Compact workspace – maximum useful information above the fold */
+:root{--radius:11px}
+.shell{max-width:1740px;padding:12px 24px 12px}
+.top{margin-bottom:8px;gap:12px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.brand{gap:9px}.brand-icon{width:34px;height:34px;border-radius:9px}.brand-icon svg{width:21px;height:21px}.brand-name{font-size:15px}.brand-sub{font-size:9px;letter-spacing:1.2px;margin-top:2px}
+.clock{gap:10px}.clock-time{font-size:25px;letter-spacing:-.8px}.clock-date{font-size:10px;margin-top:3px}
+.hero{margin:0 0 5px;align-items:center;gap:8px}h1{font-size:19px;line-height:1.2;letter-spacing:-.5px;margin:0}.segmented{padding:3px;border-radius:8px}.segment{padding:5px 10px;border-radius:6px;font-size:11px}
+.section-header{margin-bottom:5px;gap:8px}.section-header h2,.analytics-header h2,.log-head h2{font-size:15px;letter-spacing:-.25px}
+.pause-wrap{gap:6px}.pause-button{min-height:40px;min-width:176px;justify-content:center;gap:9px;background:#13804c;border:1px solid #0c7041;color:white;font-size:14px;padding:7px 14px;border-radius:9px;box-shadow:0 3px 9px #13804c24}.pause-button svg{width:19px;height:19px}.pause-count{background:#ffffff25;color:white;padding:3px 7px}.pause-time{color:#e6fff0;font-size:11px}.pause-button:hover,.pause-button.flash{background:#0d6c40;border-color:#075a34}.pause-button[aria-pressed=true]{background:#075b35;border-color:#054728;box-shadow:0 0 0 3px #2ab67545}.end-button{min-height:32px}
+.active-strip{padding:5px 10px;margin:0 0 7px;min-height:27px;border-radius:7px;font-size:11px;gap:7px}.active-strip .running-dot{width:7px;height:7px}
+.action-section{margin:0 0 7px}.action-section:last-child{margin-bottom:0}.action-section+.action-section{border-top:1px solid var(--line);padding-top:6px}.group-heading{margin:0 0 4px;gap:6px}.group-heading h3{font-size:10px;letter-spacing:.75px}.group-marker{width:6px;height:6px}
+.actions{gap:8px}.action-card{display:grid;grid-template-columns:minmax(45px,.75fr) minmax(0,2.25fr);align-content:start;border-radius:10px;box-shadow:0 2px 9px #1b284608}.action-card:hover{transform:translateY(-1px)}
+.action-button{grid-column:1/-1;flex-direction:row;align-items:center;gap:7px;min-height:36px;padding:5px 24px 5px 8px}.action-icon{width:25px;height:25px;border-radius:7px;margin:0;flex-shrink:0}.action-icon svg{width:15px;height:15px}.action-title{font-size:12px;line-height:1.15;letter-spacing:-.1px}.action-plus{width:16px;height:16px;right:6px;top:10px}.action-plus svg{width:11px;height:11px}
+.counter{margin:0;padding:5px 6px 5px 8px;border-top:1px solid var(--line);flex-direction:column;justify-content:center;align-items:flex-start;gap:2px;min-width:0}.count{font-size:22px;letter-spacing:-.6px}.count-label{font-size:9px;line-height:1.1;overflow-wrap:anywhere}
+.action-times{margin:0;padding:5px 7px;border-top:1px solid var(--line);border-left:1px solid var(--line);gap:3px 7px;font-size:9px;line-height:1.12;align-content:center}.action-times strong{font-size:12px;margin-top:2px;white-space:nowrap}.action-share{font-size:9px;line-height:1.1}
+.actions-insert .action-card{grid-template-columns:minmax(70px,.55fr) minmax(0,2.45fr)}.actions-insert .action-times{grid-template-columns:1fr 1fr 1fr;align-items:center}.actions-insert .action-share{grid-column:auto;text-align:right}
+.section-divider{border:0;border-top:1px solid #d6dde8;margin:9px 0}
+.overview{margin:0;grid-template-columns:1fr 1fr 1fr 1fr 1.25fr}.metric{padding:8px 12px}.metric-label{font-size:9px;letter-spacing:.6px;gap:5px}.metric-label svg{width:12px;height:12px}.metric-value{font-size:23px;margin-top:4px;letter-spacing:-.5px}.metric-last{font-size:14px}.metric-note{font-size:10px;line-height:1.2;margin-top:3px}
+.analytics{margin:0}.analytics-header{margin-bottom:5px}.analytics-date{padding:4px 7px;font-size:11px}.analytics-grid{gap:8px;grid-template-columns:minmax(0,1.12fr) minmax(0,1.4fr)}.viz-card{padding:8px 11px;border-radius:10px}.viz-title{font-size:12px;margin-bottom:3px}.viz-top{margin-bottom:3px}.viz-sub{font-size:10px;margin-bottom:5px;line-height:1.25}.hist-mode .segment{padding:4px 7px;font-size:10px}.histogram{min-height:0;grid-template-columns:repeat(2,minmax(40px,1fr)) 9px repeat(4,minmax(40px,1fr)) 9px minmax(40px,1fr) 9px minmax(40px,1fr);padding-bottom:0}.hist-plot{height:84px;gap:3px;background-size:auto}.hist-col{gap:3px}.hist-label{height:29px;font-size:9px;line-height:1.08}.hist-share{font-size:9px}.hist-count{font-size:10px}.hist-bar{max-width:35px}.timeline{row-gap:1px;column-gap:6px;grid-template-columns:124px minmax(0,1fr);min-width:425px}.timeline-axis{height:12px;margin-bottom:1px}.timeline-label{font-size:10px;gap:5px}.timeline-track{height:12px}.timeline-block{height:8px;top:2px}.timeline-label.group-start,.timeline-track.group-start{margin-top:5px}.timeline-note,.duration-hint{font-size:9px;line-height:1.25;margin:5px 0 0}.timeline-empty{font-size:10px;margin-top:4px}
+.log-head{padding:7px 11px;gap:6px}.log-sub{font-size:10px;margin-top:2px}.log-tools{gap:5px}.tool{padding:5px 8px;font-size:11px}.tool svg{width:13px;height:13px}.table-wrap{max-height:260px}th{padding:6px 10px;font-size:9px}td,.table-wrap td{padding:3px 10px;font-size:12px}.row-button{width:24px;height:24px;border-radius:5px}.row-button svg{width:13px;height:13px}.empty{padding:9px 15px}.empty-icon{display:none}.empty strong{font-size:12px;margin-bottom:2px}.empty span{font-size:11px}.footer{font-size:10px;margin-top:7px}
+@media(max-width:1100px){.shell{padding:10px 15px}.analytics-grid{grid-template-columns:1fr 1.25fr}.action-times{gap:3px 4px;padding:5px 5px}.action-times strong{font-size:11px}.action-title{font-size:11px}.count-label{font-size:8px}}
+@media(max-width:950px){.analytics-grid{grid-template-columns:1fr}.actions-support{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:650px){.shell{padding:10px 12px}.hero{flex-direction:row;align-items:center;flex-wrap:wrap}h1{font-size:17px}.clock-time{font-size:22px}.brand-name{font-size:13px}.brand-sub{font-size:8px}.section-header{align-items:center}.pause-button{min-width:145px;min-height:38px}.actions-support{grid-template-columns:repeat(2,minmax(0,1fr))}.actions-insert .action-card{grid-template-columns:minmax(43px,.75fr) minmax(0,2.25fr)}.actions-insert .action-times{grid-template-columns:1fr 1fr}.actions-insert .action-share{grid-column:1/-1;text-align:left}.overview{grid-template-columns:repeat(2,minmax(0,1fr))}.metric:last-child{grid-column:auto}.histogram{grid-template-columns:repeat(2,minmax(40px,1fr)) 8px repeat(4,minmax(40px,1fr)) 8px minmax(40px,1fr) 8px minmax(40px,1fr)}.footer{gap:3px}.active-elapsed{margin-left:auto}}
+@media(min-width:1200px) and (min-height:900px){.shell{padding:18px 30px}.top{margin-bottom:12px}.section-divider{margin:13px 0}.action-button{min-height:43px;padding-left:10px}.action-times,.counter{padding-top:8px;padding-bottom:8px}.metric{padding:12px 16px}.viz-card{padding:12px 15px}}
+
+
+/* Simplified metrics: equal visual weight for count and duration. */
+.actions-insert{grid-template-columns:repeat(2,minmax(0,1fr))}
+.actions-support{grid-template-columns:repeat(4,minmax(0,1fr))}
+.action-card,.actions-insert .action-card{grid-template-columns:1fr 1fr}
+.counter{align-items:center;justify-content:center;padding:5px 6px;min-height:32px}
+.count,.action-times strong{font-size:18px;line-height:1.15;font-weight:750;letter-spacing:-.35px;font-variant-numeric:tabular-nums}
+.action-times,.actions-insert .action-times{display:flex;justify-content:center;align-items:center;padding:5px 6px;gap:0}
+.action-times strong{margin:0;color:var(--ink)}
+.pause-count,.pause-time{font-size:14px;font-weight:750;font-variant-numeric:tabular-nums}
+.overview{grid-template-columns:1fr 1fr 1fr 1.25fr}
+.histogram{grid-template-columns:minmax(40px,1fr) 9px repeat(4,minmax(40px,1fr)) 9px minmax(40px,1fr) 9px minmax(40px,1fr)}
+.hist-count{white-space:nowrap;font-variant-numeric:tabular-nums;font-size:9px}
+@media(max-width:650px){.actions-support,.overview{grid-template-columns:repeat(2,minmax(0,1fr))}.count,.action-times strong{font-size:17px}}
+
+/* Full-card interaction and equal-weight metrics. */
+button.action-card{width:100%;color:var(--ink);text-align:left;cursor:pointer;appearance:none;position:relative;align-content:stretch;grid-template-rows:1fr auto}
+button.action-card .action-button{pointer-events:none}
+button.action-card:active{background:var(--tint);transform:translateY(0)}
+button.action-card:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+button.action-card .counter,button.action-card .action-times{min-height:35px;padding:5px 6px;display:flex;align-items:center;justify-content:center}
+button.action-card .count,button.action-card .action-times strong{font-size:18px;font-weight:750;line-height:1.15;letter-spacing:-.35px;color:var(--accent);white-space:nowrap;font-variant-numeric:tabular-nums}
+.pause-count,.pause-time{font-size:14px;font-weight:750;line-height:1.15;color:white}
+@media(max-width:650px){button.action-card .count,button.action-card .action-times strong{font-size:17px}}
+
+
+/* Priority action rows, prominent active task and page-level log scrolling. */
+.actions-primary,.actions-secondary{grid-template-columns:repeat(3,minmax(0,1fr))}
+.active-strip{min-height:46px;padding:8px 12px;gap:10px;margin-bottom:9px;border-radius:9px}
+.active-strip.running{min-height:62px;background:#f0f8f5;border-color:#a8d8c6;box-shadow:0 2px 10px #087f7510}
+.active-strip #active-status{font-size:12px;font-weight:600}
+.active-strip #active-name{font-size:23px;line-height:1.15;letter-spacing:-.5px;font-weight:780;overflow-wrap:anywhere}
+.active-strip .active-elapsed{font-size:25px;line-height:1.1;color:#087f75;white-space:nowrap}
+.active-strip.running .running-dot{width:10px;height:10px}
+.table-wrap{max-height:none;overflow:visible}
+.table-wrap thead{position:static}
+.table-wrap table{white-space:normal}
+@media(max-width:650px){
+ .actions-primary,.actions-secondary{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .active-strip.running{display:grid;grid-template-columns:10px minmax(0,1fr) auto;gap:4px 9px}
+ .active-strip.running .running-dot{grid-column:1;grid-row:1}
+ .active-strip.running #active-status{grid-column:2/-1;grid-row:1;font-size:11px}
+ .active-strip.running #active-name{grid-column:2;grid-row:2;font-size:19px}
+ .active-strip.running .active-elapsed{grid-column:3;grid-row:2;font-size:20px}
+ .table-wrap table,.table-wrap tbody{display:block;width:100%}
+ .table-wrap thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+ .table-wrap tbody tr{display:grid;grid-template-columns:30px minmax(0,1fr) minmax(0,1fr) 28px;gap:3px 5px;padding:8px 10px;border-bottom:1px solid var(--line)}
+ .table-wrap tbody td{padding:0;border:0;min-width:0;align-self:center;overflow-wrap:anywhere}
+ .table-wrap tbody td:nth-child(1){grid-column:1;grid-row:1}
+ .table-wrap tbody td:nth-child(2){grid-column:2;grid-row:1}
+ .table-wrap tbody td:nth-child(3){grid-column:2/-2;grid-row:2}
+ .table-wrap tbody td:nth-child(4){grid-column:2;grid-row:3;font-size:10px}
+ .table-wrap tbody td:nth-child(5){grid-column:3;grid-row:1;text-align:right}
+ .table-wrap tbody td:nth-child(6){grid-column:3;grid-row:3;text-align:right;font-size:10px}
+ .table-wrap tbody td:nth-child(7){grid-column:4;grid-row:1/3;width:auto;align-self:center}
+ .table-wrap .action-tag{white-space:normal}.table-wrap .tag-dot{flex-shrink:0}
+ .table-wrap .time-wrap{gap:3px}
+}
+
+
+/* Compact centered current task and explicit metric labels. */
+.action-title{font-size:16px;line-height:1.2;letter-spacing:-.2px;font-weight:750}
+.group-heading h3{font-size:12px;letter-spacing:.65px}
+button.action-card .action-button{min-height:38px}
+button.action-card .counter,button.action-card .action-times{flex-direction:column;gap:2px;padding:5px 6px;min-height:43px}
+.action-metric-label{font-size:10px;font-weight:600;line-height:1.1;color:var(--muted);letter-spacing:.15px}
+.pause-metric{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.pause-metric .action-metric-label{color:#e6fff0;font-size:9px}
+.pause-button{gap:12px}
+.active-strip,.active-strip.running{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) minmax(0,1fr);align-items:center;gap:8px;width:100%;max-width:680px;margin:0 auto 9px;padding:7px 12px;min-height:42px}
+.active-strip.running{min-height:51px}
+.active-context{display:flex;align-items:center;gap:7px;min-width:0}
+.active-strip #active-status{font-size:11px;line-height:1.2;font-weight:600}
+.active-strip #active-name{grid-column:2;grid-row:1;text-align:center;font-size:23px;line-height:1.15;letter-spacing:-.5px;font-weight:780}
+.active-strip .active-elapsed{grid-column:3;grid-row:1;justify-self:end;margin:0;font-size:23px;line-height:1.1;text-align:right}
+.active-strip:not(.running){display:flex;justify-content:center}
+.active-strip:not(.running) #active-name,.active-strip:not(.running) .active-elapsed{display:none}
+@media(max-width:650px){
+ .action-title{font-size:14px}.group-heading h3{font-size:11px}
+ .active-strip.running{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:5px 8px}
+ .active-strip.running .active-context{grid-column:1/-1;grid-row:1;justify-content:center}
+ .active-strip.running #active-name{grid-column:1/-1;grid-row:2;text-align:center;font-size:20px;padding:0}
+ .active-strip.running .active-elapsed{grid-column:1/-1;grid-row:3;justify-self:center;text-align:center;font-size:21px}
+ .pause-button{gap:7px;min-width:0}
+}
+
+</style>
 </head>
 <body>
-  <header><div class="head"><div class="logo" aria-hidden="true">✉</div><div><h1>BILLDING</h1><div class="subtitle">MESSAGGI CLIENTI</div></div></div></header>
-  <main>
-    <div class="panel">
-      <section class="section">
-        <h2 class="step">01 — SELEZIONA OPERATORE</h2>
-        <div class="choices" id="operators">
-          <button type="button" class="choice operator-choice" data-operator="Daniele">✈️ Daniele</button>
-          <button type="button" class="choice operator-choice" data-operator="Armando">🌱 Armando</button>
-          <button type="button" class="choice operator-choice" data-operator="Claudio">⚾ Claudio</button>
-        </div>
-      </section>
-      <section class="section" id="categorySection" hidden>
-        <h2 class="step">02 — SELEZIONA CATEGORIA</h2>
-        <div class="choices categories" id="categories">
-          <button type="button" class="choice" data-category="FIRMA"><span class="choice-icon" aria-hidden="true">✍️📄</span>FIRMA</button>
-          <button type="button" class="choice" data-category="PROMEMORIA"><span class="choice-icon" aria-hidden="true">⚠️📄</span>PROMEMORIA</button>
-          <button type="button" class="choice" data-category="KO"><span class="choice-icon" aria-hidden="true">❌</span>KO</button>
-          <button type="button" class="choice" data-category="DOMANDE"><span class="choice-icon" aria-hidden="true">🤔❓</span>DOMANDE</button>
-          <button type="button" class="choice" data-category="CHIUSURA CONVERSAZIONE"><span class="choice-icon" aria-hidden="true">💬✅</span>CHIUSURA CONVERSAZIONE</button>
-          <button type="button" class="choice" data-category="CERTIFICATO"><span class="choice-icon" aria-hidden="true">📑✅</span>CERTIFICATO</button>
-        </div>
-      </section>
-      <section class="section" id="secondSection" hidden>
-        <div class="sectionhead"><h2 class="step" id="secondHeading">03 — SELEZIONA FORNITORE</h2><button type="button" class="reset" id="reset">↻ Ricomincia</button></div>
-        <div class="choices" id="options"></div>
-      </section>
-      <section class="section" id="suboptionSection" hidden>
-        <h2 class="step">04 — SELEZIONA SOLUZIONE</h2>
-        <div class="choices subchoices" id="suboptions"></div>
-      </section>
-      <section class="section" id="thirdSection" hidden>
-        <h2 class="step">05 — SELEZIONA SOLUZIONE</h2>
-        <div class="choices subchoices" id="thirdoptions"></div>
-      </section>
-      <section class="section" id="fourthSection" hidden>
-        <h2 class="step">06 — SELEZIONA MESSAGGIO DOCUMENTO</h2>
-        <div class="choices subchoices" id="fourthoptions"></div>
-      </section>
-      <section class="section" id="certificateSection" hidden>
-        <h2 class="step">04 — COMPILA I DATI</h2>
-        <div class="certificate-fields">
-          <label>NOME CLIENTE <input id="certCliente" type="text" maxlength="30" placeholder="Nome cliente" autocomplete="off"></label>
-          <label>AGENZIA (FACOLTATIVA)
-            <select id="certAgenzia">
-              <option value="">Nessuna agenzia</option>
-              <option value="ProfessioneCasa">ProfessioneCasa</option>
-              <option value="l'Agenzia">l'Agenzia</option>
-            </select>
-          </label>
-          <label>OPERAZIONE (OBBLIGATORIA)
-            <select id="certOperazione" required>
-              <option value="subentro">subentro</option>
-              <option value="voltura" selected>voltura</option>
-              <option value="cambio fornitore">cambio fornitore</option>
-            </select>
-          </label>
-          <label>INDIRIZZO <input id="certIndirizzo" type="text" maxlength="30" placeholder="Indirizzo immobile" autocomplete="off"></label>
-        </div>
-        <div class="message" id="certificateMessage">
-          <h3 id="certificateTitle">Messaggio certificato</h3>
-          <p id="certificateText"></p>
-          <div class="actions"><button type="button" class="copy" id="certificateCopy">📋 Copia messaggio</button></div>
-        </div>
-      </section>
-      <section class="section" id="messagesSection" hidden>
-        <h2 class="step" id="messagesHeading">04 — MESSAGGI DISPONIBILI</h2>
-        <div id="messages"></div>
-      </section>
-      <div class="intro" id="intro">Seleziona il tuo nome per iniziare.</div>
-    </div>
-    <p class="note">I testi non ancora forniti rimangono vuoti. Verificare sempre i contenuti prima dell’invio, in particolare quelli con riferimenti a date o normative. Non inserire dati personali o riservati nel codice pubblico.</p>
-  </main>
-  <script>
-    // TESTI: modificare qui i messaggi. I campi non forniti sono intenzionalmente vuoti.
-    const catalogo = {
-  "FIRMA": {
-    "ENEL": [
-      {
-        "titolo": "Firma digitale",
-        "testo": "Gentile cliente, \n\nPiacere, sono Armando di Billding per la gestione del cambio fornitore per le sue utenze.\nLa prego di confermarmi di aver letto questo messaggio. \n\nHo avviato la pratica con ENEL, che le invierà a breve una mail di presa in carico della richiesta.\n\nRiceverà in seguito una mail da FIRMARE DIGITALMENTE per COMPLETARE l'operazione. \nDovrà aprirla e verificarla inserendo un'OTP che le sarà inviato tramite SMS. \nSi aprirà una pagina con in fondo un questionario in cui indicare la prima opzione \"Ho incontrato il consulente di persona senza precedente telefonata\". ⬅️\n\nE' indispensabile questa procedura per completare la richiesta. \nQualora non ricevesse l'email con OTP entro 2 giorni, cerchi nello spam, e mi avverta tempestivamente.\n\nCordiali saluti\n\nArmando\nTeam Billding"
-      }
-    ],
-    "PLENITUDE": {
-      "1° FIRMA": [
-        {
-          "titolo": "1° FIRMA",
-          "testo": "Buongiorno, \npiacere sono Daniele di Billding per la lavorazione della sua richiesta con Eni Plenitude.\n\nRiceverà a momenti una email. Dovrà:\n1) aprire mail\n2) spuntare flag obbligatori\n3) aprire 2 PDF in fondo alla mail\n4) PREMERE CONFERMA ✅ in fondo quando diventa cliccabile\n\nLa prego di completare tutto oggi e darmi conferma.\n\nGrazie e buona giornata!\n\nDaniele\nTeam Billding"
-        }
-      ],
-      "SPIEGAZIONE DETTAGLIATA": [
-        {
-          "titolo": "SPIEGAZIONE DETTAGLIATA",
-          "testo": "Nel dettaglio:\n\n- una volta aperto il link, troverà la pagina con i consensi obbligatori e quelli facoltativi.\n- si assicuri di aver spuntato i consensi obbligatori, sono quelli in grassetto.\n- in fondo troverà due pdf e il tasto di conferma. Quest'ultimo tasto si abilita solo se il sistema rileva che è stato scaricato/aperto il primo pdf. Non occorre compilarlo, ma solo cliccarci / scaricarlo o aprirlo.\n\nSe ha fatto tutte queste azioni con cura, e comunque non si abilita la conferma, allora potrebbe essere un bug. Provi se riesce dalla email.\n\nCome ultima soluzione, possiamo provare con REINVIO di sms / mail, oppure, meglio ancora, me lo inoltra e provo a dare io conferma da un dispositivo diverso."
-        }
-      ]
-    },
-    "ILLUMIA": [
-      {
-        "titolo": "Firma digitale",
-        "testo": ""
-      }
-    ]
-  },
-  "PROMEMORIA": {
-    "ENEL": [
-      {
-        "titolo": "Primo promemoria",
-        "testo": ""
-      },
-      {
-        "titolo": "Secondo promemoria",
-        "testo": ""
-      }
-    ],
-    "PLENITUDE": [
-      {
-        "titolo": "Primo promemoria",
-        "testo": ""
-      },
-      {
-        "titolo": "Secondo promemoria",
-        "testo": ""
-      },
-      {
-        "titolo": "Offerta in scadenza oggi — email e SMS reinviati",
-        "testo": "Buongiorno, la ricontatto con urgenza per la sua richiesta con Eni Plenitude.\n\n**⚠️ L'offerta SCADE questa sera e la conferma NON risulta ancora completata.**\n\nAbbiamo appena provveduto a **reinviarle email e SMS** per completare la sottoscrizione.\n\nLe chiediamo gentilmente di **procedere entro oggi**, per non perdere le condizioni economiche concordate, e di darci conferma una volta completato.\n\nGrazie per la collaborazione!\n\nDaniele\nTeam Billding"
-      }
-    ],
-    "ILLUMIA": [
-      {
-        "titolo": "Primo promemoria",
-        "testo": ""
-      },
-      {
-        "titolo": "Secondo promemoria",
-        "testo": ""
-      }
-    ]
-  },
-  "KO": {
-    "CARTA IDENTITÀ": {
-      "C.I. fotografata per ENEL": {
-        "Richiesta CI intera": [
-          {
-            "titolo": "Richiesta CI intera",
-            "testo": "Buongiorno, piacere sono Armando di Billding per la lavorazione della sua richiesta di cambio fornitore con Enel.\n\nPer completare la procedura Enel richiede copia del documento di identità con determinati requisiti:\n1) documento nella sua interezza\n2) no fotocopia o scansione\n\nSfortunatamente il documento che ci ha fornito non rispecchia requisiti per cui avrei bisogno che mi re-inviasse foto del fronte e del retro del documento di identità.\nPuò inviare qui in questa chat.\n\nGrazie mille."
-          }
-        ],
-        "Purtroppo Enel non accetta...": [
-          {
-            "titolo": "Purtroppo Enel non accetta...",
-            "testo": "Purtroppo Enel non accetta scansioni o immagini ritagliate da un PDF, anche se il documento risulta perfettamente leggibile.\n\nPer completare la verifica, il fornitore richiede necessariamente una fotografia originale del documento* con tutti e quattro i bordi ben visibili.\n\nSe non ha a disposizione la carta d'identità, possiamo utilizzare in alternativa una fotografia della patente di guida, o passaporto, purché valido e fotografato direttamente.\n\nSi tratta di un requisito imposto da Enel per la verifica dell'identità, senza il quale non ci è possibile completare la trasmissione della pratica.\n\nRiesce gentilmente a inviarci una nuova fotografia di uno dei due documenti?\n\nLa ringrazio per la collaborazione!"
-          }
-        ]
-      },
-      "C.I. mancante / illeggibile": [
-        {
-          "titolo": "C.I. mancante / illeggibile",
-          "testo": "Buongiorno, piacere sono Armando di Billding per la lavorazione della sua richiesta di voltura/subentro.\n\nPer completare la procedura il fornitore richiede il documento di identità.\n\nLe chiedo gentilmente di inviarmelo qui in chat.\n\nGrazie mille."
-        }
-      ]
-    },
-    "IBAN": {
-      "IBAN NON INTESTATO": {
-        "Risolvibile con dati terzi": [
-          {
-            "titolo": "Risolvibile con dati terzi",
-            "testo": "Buongiorno,\n\npiacere sono Armando di Billding per la lavorazione della sua richiesta di cambio fornitore.\n\nDa una verifica, risulta che l'IBAN fornito non è associato al suo codice fiscale.\n\nPer completare la procedura il fornitore richiede anche NOME, COGNOME e CODICE FISCALE dell'intestatario dell'IBAN.\n\nLe chiedo gentilmente di fornirmi i dati qui in chat.\n\nGrazie mille."
-          }
-        ],
-        "KO serve IBAN dell'intestatario": [
-          {
-            "titolo": "KO serve IBAN dell'intestatario",
-            "testo": "Buongiorno,\npiacere sono Armando di Billding per la lavorazione della sua richiesta di cambio fornitore.\n\nDa una verifica, risulta che l'IBAN fornito non è associato al suo codice fiscale.\nPer completare la procedura il fornitore richiede un'IBAN intestato all'INTESTATARIO dell'utenza\n\nLe chiedo gentilmente se può fornirmi un IBAN suo, per mandare avanti la pratica.\n\nGrazie mille."
-          }
-        ]
-      },
-      "IBAN RICHIESTO": [
-        {
-          "titolo": "IBAN RICHIESTO",
-          "testo": "Buongiorno,\npiacere sono Armando di Billding per la lavorazione della sua richiesta di cambio fornitore.\n\nPer completare la procedura il fornitore richiede necessariamente un'IBAN per la domiciliazione bancaria.\n\nLe chiedo gentilmente se può fornirmi un IBAN, per mandare avanti la pratica.\n\nGrazie mille."
-        }
-      ],
-      "IBAN ERRATO INESISTENTE": [
-        {
-          "titolo": "IBAN ERRATO INESISTENTE",
-          "testo": "Buongiorno,\n\npiacere sono Armando di Billding per la lavorazione della sua richiesta di cambio fornitore.\n\nDa una verifica, risulta che l'IBAN fornito ha una sintassi errata.\n\nPotrebbe esserci una o più cifre errate, oppure la banca è stata acquisita e l'IBAN aggiornato.\n\nLe chiedo gentilmente di verificare e fornirmi l'IBAN corretto qui in chat.\n\nGrazie mille."
-        }
-      ],
-      "IBAN PREPAGATA": [
-        {
-          "titolo": "IBAN PREPAGATA",
-          "testo": "Buongiorno,\n\npiacere sono Armando di Billding per la lavorazione della sua richiesta di cambio fornitore.\n\nDa una verifica, risulta che l'IBAN fornito sia associato ad una carta PREPAGATA.\n\nPurtroppo, il fornitore non lo accetta per la domiciliazione bancaria.\n\nLe chiedo gentilmente di fornirmi un'IBAN alternativo qui in chat.\n\nPuò eventualmente scegliere come metodo di pagamento \"bollettino\".\n\nAttendo conferma su come procedere.\n\nGrazie mille."
-        }
-      ]
-    },
-    "KO CREDITIZIO": {
-      "A2A": {
-        "riproposta": [
-          {
-            "titolo": "Riproposta",
-            "testo": "Buongiorno, piacere sono Daniele del Servizio Clienti di Billding.\n\nLa ricontatto in merito alla sua richiesta di cambio fornitore avviata qualche giorno fa con ##NOME FORNITORE SCELTO#. \n\nPurtroppo, a seguito di verifiche di natura creditizia, ###FORNITORE### ci ha comunicato di non poter procedere con il cambio. Non mi è possibile verificare nel dettaglio la motivazione: tipicamente sono effettuate consultazioni di banche dati, registro TIMOE o verifiche su precedenti contenziosi avuti con società terze.\n\nDesiderando comunque portare a compimento un cambio che le garantisca il risparmio preventivato, le vorrei proporre delle soluzioni alternative, con condizioni economiche altrettanto vantaggiose, in grado di accogliere la sua richiesta.\n\nResto a disposizione per fornirle tutti i dettagli.\n\nCordiali saluti,\n\nDaniele"
-          }
-        ],
-        "perso": [
-          {
-            "titolo": "Perso",
-            "testo": "Buongiorno, piacere sono Daniele del Servizio Clienti di Billding.\n\nLa ricontatto in merito alla sua richiesta di cambio fornitore avviata qualche giorno fa con ##NOME FORNITORE SCELTO#. \n\nPurtroppo, a seguito di verifiche di natura creditizia, ###FORNITORE### ci ha comunicato di non poter procedere con il cambio. Non mi è possibile verificare nel dettaglio la motivazione: tipicamente sono effettuate consultazioni di banche dati, registro TIMOE o verifiche su precedenti contenziosi avuti con società terze.\n\nResto a disposizione per fornirle tutti i dettagli.\n\nCordiali saluti,\n\nDaniele"
-          }
-        ]
-      },
-      "DUFERCO": {
-        "riproposta": [
-          {
-            "titolo": "Riproposta",
-            "testo": "Buongiorno, piacere sono Daniele del Servizio Clienti di Billding.\n\nLa ricontatto in merito alla sua richiesta di cambio fornitore avviata qualche giorno fa con ##NOME FORNITORE SCELTO#. \n\nPurtroppo, a seguito di verifiche di natura creditizia, ###FORNITORE### ci ha comunicato di non poter procedere con il cambio. Non mi è possibile verificare nel dettaglio la motivazione: tipicamente sono effettuate consultazioni di banche dati, registro TIMOE o verifiche su precedenti contenziosi avuti con società terze.\n\nDesiderando comunque portare a compimento un cambio che le garantisca il risparmio preventivato, le vorrei proporre delle soluzioni alternative, con condizioni economiche altrettanto vantaggiose, in grado di accogliere la sua richiesta.\n\nResto a disposizione per fornirle tutti i dettagli.\n\nCordiali saluti,\n\nDaniele"
-          }
-        ],
-        "perso": [
-          {
-            "titolo": "Perso",
-            "testo": "Buongiorno, piacere sono Daniele del Servizio Clienti di Billding.\n\nLa ricontatto in merito alla sua richiesta di cambio fornitore avviata qualche giorno fa con ##NOME FORNITORE SCELTO#. \n\nPurtroppo, a seguito di verifiche di natura creditizia, ###FORNITORE### ci ha comunicato di non poter procedere con il cambio. Non mi è possibile verificare nel dettaglio la motivazione: tipicamente sono effettuate consultazioni di banche dati, registro TIMOE o verifiche su precedenti contenziosi avuti con società terze.\n\nResto a disposizione per fornirle tutti i dettagli.\n\nCordiali saluti,\n\nDaniele"
-          }
-        ]
-      },
-      "ENEL": {
-        "riproposta": [
-          {
-            "titolo": "Riproposta",
-            "testo": "Buongiorno, piacere sono Daniele del Servizio Clienti di Billding.\n\nLa ricontatto in merito alla sua richiesta di cambio fornitore avviata qualche giorno fa con ##NOME FORNITORE SCELTO#. \n\nPurtroppo, a seguito di verifiche di natura creditizia, ###FORNITORE### ci ha comunicato di non poter procedere con il cambio. Non mi è possibile verificare nel dettaglio la motivazione: tipicamente sono effettuate consultazioni di banche dati, registro TIMOE o verifiche su precedenti contenziosi avuti con società terze.\n\nDesiderando comunque portare a compimento un cambio che le garantisca il risparmio preventivato, le vorrei proporre delle soluzioni alternative, con condizioni economiche altrettanto vantaggiose, in grado di accogliere la sua richiesta.\n\nResto a disposizione per fornirle tutti i dettagli.\n\nCordiali saluti,\n\nDaniele"
-          }
-        ],
-        "perso": [
-          {
-            "titolo": "Perso",
-            "testo": "Buongiorno, piacere sono Daniele del Servizio Clienti di Billding.\n\nLa ricontatto in merito alla sua richiesta di cambio fornitore avviata qualche giorno fa con ##NOME FORNITORE SCELTO#. \n\nPurtroppo, a seguito di verifiche di natura creditizia, ###FORNITORE### ci ha comunicato di non poter procedere con il cambio. Non mi è possibile verificare nel dettaglio la motivazione: tipicamente sono effettuate consultazioni di banche dati, registro TIMOE o verifiche su precedenti contenziosi avuti con società terze.\n\nResto a disposizione per fornirle tutti i dettagli.\n\nCordiali saluti,\n\nDaniele"
-          }
-        ]
-      },
-      "EON": {
-        "riproposta": [
-          {
-            "titolo": "Riproposta",
-            "testo": "Buongiorno, piacere sono Daniele del Servizio Clienti di Billding.\n\nLa ricontatto in merito alla sua richiesta di cambio fornitore avviata qualche giorno fa con ##NOME FORNITORE SCELTO#. \n\nPurtroppo, a seguito di verifiche di natura creditizia, ###FORNITORE### ci ha comunicato di non poter procedere con il cambio. Non mi è possibile verificare nel dettaglio la motivazione: tipicamente sono effettuate consultazioni di banche dati, registro TIMOE o verifiche su precedenti contenziosi avuti con società terze.\n\nDesiderando comunque portare a compimento un cambio che le garantisca il risparmio preventivato, le vorrei proporre delle soluzioni alternative, con condizioni economiche altrettanto vantaggiose, in grado di accogliere la sua richiesta.\n\nResto a disposizione per fornirle tutti i dettagli.\n\nCordiali saluti,\n\nDaniele"
-          }
-        ],
-        "perso": [
-          {
-            "titolo": "Perso",
-            "testo": "Buongiorno, piacere sono Daniele del Servizio Clienti di Billding.\n\nLa ricontatto in merito alla sua richiesta di cambio fornitore avviata qualche giorno fa con ##NOME FORNITORE SCELTO#. \n\nPurtroppo, a seguito di verifiche di natura creditizia, ###FORNITORE### ci ha comunicato di non poter procedere con il cambio. Non mi è possibile verificare nel dettaglio la motivazione: tipicamente sono effettuate consultazioni di banche dati, registro TIMOE o verifiche su precedenti contenziosi avuti con società terze.\n\nResto a disposizione per fornirle tutti i dettagli.\n\nCordiali saluti,\n\nDaniele"
-          }
-        ]
-      },
-      "ILLUMIA": {
-        "riproposta": [
-          {
-            "titolo": "Riproposta",
-            "testo": "Buongiorno, piacere sono Daniele del Servizio Clienti di Billding.\n\nLa ricontatto in merito alla sua richiesta di cambio fornitore avviata qualche giorno fa con ##NOME FORNITORE SCELTO#. \n\nPurtroppo, a seguito di verifiche di natura creditizia, ###FORNITORE### ci ha comunicato di non poter procedere con il cambio. Non mi è possibile verificare nel dettaglio la motivazione: tipicamente sono effettuate consultazioni di banche dati, registro TIMOE o verifiche su precedenti contenziosi avuti con società terze.\n\nDesiderando comunque portare a compimento un cambio che le garantisca il risparmio preventivato, le vorrei proporre delle soluzioni alternative, con condizioni economiche altrettanto vantaggiose, in grado di accogliere la sua richiesta.\n\nResto a disposizione per fornirle tutti i dettagli.\n\nCordiali saluti,\n\nDaniele"
-          }
-        ],
-        "perso": [
-          {
-            "titolo": "Perso",
-            "testo": "Buongiorno, piacere sono Daniele del Servizio Clienti di Billding.\n\nLa ricontatto in merito alla sua richiesta di cambio fornitore avviata qualche giorno fa con ##NOME FORNITORE SCELTO#. \n\nPurtroppo, a seguito di verifiche di natura creditizia, ###FORNITORE### ci ha comunicato di non poter procedere con il cambio. Non mi è possibile verificare nel dettaglio la motivazione: tipicamente sono effettuate consultazioni di banche dati, registro TIMOE o verifiche su precedenti contenziosi avuti con società terze.\n\nResto a disposizione per fornirle tutti i dettagli.\n\nCordiali saluti,\n\nDaniele"
-          }
-        ]
-      },
-      "NEN": {
-        "riproposta": [
-          {
-            "titolo": "Riproposta",
-            "testo": "Buongiorno, piacere sono Daniele del Servizio Clienti di Billding.\n\nLa ricontatto in merito alla sua richiesta di cambio fornitore avviata qualche giorno fa con ##NOME FORNITORE SCELTO#. \n\nPurtroppo, a seguito di verifiche di natura creditizia, ###FORNITORE### ci ha comunicato di non poter procedere con il cambio. Non mi è possibile verificare nel dettaglio la motivazione: tipicamente sono effettuate consultazioni di banche dati, registro TIMOE o verifiche su precedenti contenziosi avuti con società terze.\n\nDesiderando comunque portare a compimento un cambio che le garantisca il risparmio preventivato, le vorrei proporre delle soluzioni alternative, con condizioni economiche altrettanto vantaggiose, in grado di accogliere la sua richiesta.\n\nResto a disposizione per fornirle tutti i dettagli.\n\nCordiali saluti,\n\nDaniele"
-          }
-        ],
-        "perso": [
-          {
-            "titolo": "Perso",
-            "testo": "Buongiorno, piacere sono Daniele del Servizio Clienti di Billding.\n\nLa ricontatto in merito alla sua richiesta di cambio fornitore avviata qualche giorno fa con ##NOME FORNITORE SCELTO#. \n\nPurtroppo, a seguito di verifiche di natura creditizia, ###FORNITORE### ci ha comunicato di non poter procedere con il cambio. Non mi è possibile verificare nel dettaglio la motivazione: tipicamente sono effettuate consultazioni di banche dati, registro TIMOE o verifiche su precedenti contenziosi avuti con società terze.\n\nResto a disposizione per fornirle tutti i dettagli.\n\nCordiali saluti,\n\nDaniele"
-          }
-        ]
-      },
-      "OCTOPUS": {
-        "riproposta": [
-          {
-            "titolo": "Riproposta",
-            "testo": "Buongiorno, piacere sono Daniele del Servizio Clienti di Billding.\n\nLa ricontatto in merito alla sua richiesta di cambio fornitore avviata qualche giorno fa con ##NOME FORNITORE SCELTO#. \n\nPurtroppo, a seguito di verifiche di natura creditizia, ###FORNITORE### ci ha comunicato di non poter procedere con il cambio. Non mi è possibile verificare nel dettaglio la motivazione: tipicamente sono effettuate consultazioni di banche dati, registro TIMOE o verifiche su precedenti contenziosi avuti con società terze.\n\nDesiderando comunque portare a compimento un cambio che le garantisca il risparmio preventivato, le vorrei proporre delle soluzioni alternative, con condizioni economiche altrettanto vantaggiose, in grado di accogliere la sua richiesta.\n\nResto a disposizione per fornirle tutti i dettagli.\n\nCordiali saluti,\n\nDaniele"
-          }
-        ],
-        "perso": [
-          {
-            "titolo": "Perso",
-            "testo": "Buongiorno, piacere sono Daniele del Servizio Clienti di Billding.\n\nLa ricontatto in merito alla sua richiesta di cambio fornitore avviata qualche giorno fa con ##NOME FORNITORE SCELTO#. \n\nPurtroppo, a seguito di verifiche di natura creditizia, ###FORNITORE### ci ha comunicato di non poter procedere con il cambio. Non mi è possibile verificare nel dettaglio la motivazione: tipicamente sono effettuate consultazioni di banche dati, registro TIMOE o verifiche su precedenti contenziosi avuti con società terze.\n\nResto a disposizione per fornirle tutti i dettagli.\n\nCordiali saluti,\n\nDaniele"
-          }
-        ]
-      },
-      "PLENITUDE": {
-        "riproposta": [
-          {
-            "titolo": "Riproposta",
-            "testo": "Buongiorno, piacere sono Daniele del Servizio Clienti di Billding.\n\nLa ricontatto in merito alla sua richiesta di cambio fornitore avviata qualche giorno fa con ##NOME FORNITORE SCELTO#. \n\nPurtroppo, a seguito di verifiche di natura creditizia, ###FORNITORE### ci ha comunicato di non poter procedere con il cambio. Non mi è possibile verificare nel dettaglio la motivazione: tipicamente sono effettuate consultazioni di banche dati, registro TIMOE o verifiche su precedenti contenziosi avuti con società terze.\n\nDesiderando comunque portare a compimento un cambio che le garantisca il risparmio preventivato, le vorrei proporre delle soluzioni alternative, con condizioni economiche altrettanto vantaggiose, in grado di accogliere la sua richiesta.\n\nResto a disposizione per fornirle tutti i dettagli.\n\nCordiali saluti,\n\nDaniele"
-          }
-        ],
-        "perso": [
-          {
-            "titolo": "Perso",
-            "testo": "Buongiorno, piacere sono Daniele del Servizio Clienti di Billding.\n\nLa ricontatto in merito alla sua richiesta di cambio fornitore avviata qualche giorno fa con ##NOME FORNITORE SCELTO#. \n\nPurtroppo, a seguito di verifiche di natura creditizia, ###FORNITORE### ci ha comunicato di non poter procedere con il cambio. Non mi è possibile verificare nel dettaglio la motivazione: tipicamente sono effettuate consultazioni di banche dati, registro TIMOE o verifiche su precedenti contenziosi avuti con società terze.\n\nResto a disposizione per fornirle tutti i dettagli.\n\nCordiali saluti,\n\nDaniele"
-          }
-        ]
-      }
-    },
-    "KO INTESTAZIONE": [
-      {
-        "titolo": "KO INTESTAZIONE",
-        "testo": "Buongiorno, piacere, sono Daniele del Servizio Clienti Billding.\n\nLa contatto in merito alla sua richiesta di cambio fornitore.\n\nDurante le verifiche abbiamo riscontrato che **la bolletta caricata risulta intestata a una persona diversa rispetto ai dati anagrafici presenti nel suo profilo**.\n\nPer procedere correttamente, avremmo bisogno di capire quale operazione desidera effettuare:\n\n1. **Cambio fornitore per conto di un'altra persona** (ad esempio un familiare o partner): in questo caso sarà necessario aggiornare il profilo con i dati dell'effettivo intestatario della bolletta.\n2. **Cambio intestatario della fornitura (voltura):** se desidera intestare l'utenza a suo nome, dovremo procedere con una voltura anziché con un semplice cambio fornitore.\n\nLe chiediamo gentilmente di confermarci **quale delle due operazioni** desidera effettuare, così da poter gestire correttamente la sua richiesta.\n\nRimaniamo in attesa di un suo riscontro.\n\nGrazie e cordiali saluti,\n\nDaniele\n*Team Billding*"
-      }
-    ],
-    "ERROR 4111 EMAIL": [
-      {
-        "titolo": "Error 4111 email",
-        "testo": "Buongiorno, piacere, sono Daniele del Servizio Clienti Billding.\n\nLa contatto in merito alla sua richiesta di cambio fornitore con Octopus Energy.\n\nDurante le verifiche abbiamo riscontrato che l'indirizzo email da lei indicato risulta già associato a un altro codice fiscale nei sistemi di Octopus, impedendoci di procedere correttamente con la sottoscrizione.\n\nLe risulta di aver già utilizzato questo indirizzo email per un'altra fornitura o per un contratto intestato a un'altra persona?\n\nIn alternativa, avrebbe a disposizione un altro indirizzo email da utilizzare per completare la richiesta?\n\nLa ringrazio per la collaborazione e resto a disposizione"
-      }
-    ],
-    "OFFERTA NON OTTIMALE": {
-      "RICHIESTA BOLLETTA PER CONFRONTO": [
-        {
-          "titolo": "Richiesta bolletta per confronto",
-          "testo": "Buongiorno, piacere, sono Daniele del Servizio Clienti Billding.\n\nLa contatto in merito alla sua richiesta di cambio fornitore, a seguito di un'ulteriore verifica della documentazione caricata.\n\nHo riscontrato che la bolletta inserita non riporta i consumi annui della fornitura. Di conseguenza, la nostra piattaforma ha elaborato il confronto considerando un consumo pari a zero, suggerendole un'offerta ottimizzata per questo profilo, che potrebbe non essere la più conveniente in presenza di consumi superiori.\n\nPer assicurarci di proporle la soluzione economicamente più vantaggiosa, le chiederei gentilmente di inviarci una bolletta completa, dalla quale poter ricavare i consumi effettivi e verificare se sia opportuno mantenere l'offerta selezionata oppure valutarne una alternativa.\n\nLe chiederei inoltre due semplici informazioni:\n- L'immobile è utilizzato come prima o seconda casa?\n- Il gas viene utilizzato anche per il riscaldamento, oppure soltanto per acqua calda e cucina?\n\nCon queste informazioni potremo effettuare una valutazione più accurata e consigliarle la tariffa più adatta alle sue esigenze.\n\nResto a disposizione e la ringrazio per la collaborazione!\n\nDaniele\nTeam Billding"
-        }
-      ],
-      "SUGGERITA ALTRA OFFERTA": [
-        {
-          "titolo": "Suggerita altra offerta",
-          "testo": "Buongiorno, piacere, sono Daniele del Servizio Clienti Billding.\n\nLa ricontatto in merito alla sua recente richiesta di cambio fornitore con Octopus Energy.\n\nHo effettuato un'analisi più approfondita della sua bolletta e ho individuato un aspetto importante che desidero segnalarle.\n\nIn fase di lettura della documentazione, la nostra piattaforma aveva rilevato un consumo annuo di gas pari a zero, suggerendole di conseguenza l'offerta indicizzata di Octopus.\n\nDalla verifica della bolletta originale, tuttavia, emerge un consumo di gas superiore a quello inizialmente rilevato. L'offerta proposta automaticamente non risulta quindi la soluzione ottimale per il suo effettivo profilo di consumo.\n\nConsiderando inoltre gli attuali rincari del mercato energetico, vorrei proporle un'alternativa che ritengo più adatta alle sue esigenze: Eni Plenitude, con prezzo della materia prima gas bloccato a 0,75 €/Smc per 24 mesi.\n\nPer darle un riferimento, alcune offerte indicizzate possono oggi superare 1 €/metro cubo di gas, più i margini applicati dal fornitore. Avrebbe quindi un vantaggio economico significativo, oltre a rimanere protetto da ulteriori aumenti nei prossimi due anni.\n\nLa procedura prevede semplicemente che mi dia conferma: ha già il profilo attivo in Billding e non è richiesta ulteriore documentazione.\n\nCi tenevo a segnalarle questa opportunità prima di procedere, così da assicurarci che la tariffa sottoscritta fosse effettivamente la più adatta alle sue esigenze.\n\nResto a disposizione per ulteriori chiarimenti e valutare come procedere.\n\nBuona giornata!\n\nDaniele\nTeam Billding"
-        }
-      ]
-    }
-  },
-  "CHIUSURA CONVERSAZIONE": {
-    "Resto a disposizione": [
-      {
-        "titolo": "Resto a disposizione",
-        "testo": "Benissimo.\nRimango a disposizione per qualsiasi ulteriore chiarimento o necessità.\nLe auguro una buona giornata.\nDaniele\n_Team Billding_"
-      }
-    ],
-    "Conferma firma": [
-      {
-        "titolo": "Conferma firma",
-        "testo": "Buongiorno, le confermo che *la sua pratica risulta correttamente firmata* e che la procedura di sottoscrizione è stata completata con successo.\n\nRimango a disposizione per qualsiasi ulteriore necessità.\n\nCordiali saluti,\n\n_Team Billding_"
-      }
-    ],
-    "Invito recensione": [
-      {
-        "titolo": "Invito recensione",
-        "testo": "A questo punto, le chiedo un piccolissimo favore! 😁\nSe può farmi una brevissima recensione, menzionandomi \"Daniele\" se ha apprezzato il servizio e il supporto!\nBasta una riga, e ci aiuterebbe molto a crescere. Le lascio il link! Grazie in anticipo!\n\nhttps://it.trustpilot.com/evaluate/billding.it"
-      }
-    ]
-  },
-  "DOMANDE": {
-    "Quando si attiverà la mia fornitura? (LUCE 24h)": [
-      {
-        "titolo": "Attivazione LUCE in 24 ore",
-        "testo": "I tempi canonici sono 45 giorni (1° giorno del secondo mese); tuttavia proprio in queste settimane ARERA sta effettuando dei cambiamenti storici nelle tempistiche di attivazione dell'utenza LUCE.\n\nDal 1° dicembre entrerà in vigore l'attivazione in 24 ore. Probabilmente la sua pratica rientrerà in questa categoria, e potrebbe attivarsi già i primi di dicembre.\n\nInvieranno comunque una comunicazione il giorno  dell'attivazione; in alternativa suggerisco di registrarsi all'area personale del fornitore."
-      }
-    ],
-    "Quando si attiverà la mia fornitura? (generica 45 giorni)": [
-      {
-        "titolo": "Attivazione generica — 45 giorni",
-        "testo": ""
-      }
-    ],
-    "Numero errato": [
-      {
-        "titolo": "Numero errato",
-        "testo": "Buongiorno, \n\nper quanto riguarda il numero di telefono, le confermo che è stato intenzionalmente modificato a tua tutela per la sola fase di avvio della pratica.\n\nLa motivazione di tale scelta, nel suo esclusivo interesse, è di impedire a call center truffa di raggiungerla qualora ci siano fughe o cessioni di dati illecite dai sistemi online durante la fase di passaggio a PLENITUDE. Abbiamo ricevuto numerose segnalazioni e la priorità per noi è preservare l'esperienza del cliente senza che venga assillato dai call center. \n\nIl numero è facilmente modificabile dall'area personale, e si può correggere in un secondo momento, se serve col nostro supporto.\n\nSpero di aver chiarito i dubbi e rimango a disposizione per qualsiasi esigenza."
-      }
-    ]
-  }
-};
-
-    // CERTIFICATO: tutti i dati rimangono soltanto nel browser, non vengono salvati.
-    const certificati = {
-      'CLIENTE': `Buongiorno ###NOME_CLIENTE###,
-
-piacere sono ###OPERATORE###, del servizio clienti di Billding, in collaborazione con ###AGENZIA###. 
-
-Per completare la sua richiesta di ###OPERAZIONE### con A2A per ###INDIRIZZO### , occorre un titolo di possesso dell'immobile: rogito, contratto d'affitto, o il certificato di registrazione all'agenzia delle entrate. 
-
-In alternativa, come soluzione equivalente, possiamo effettuare ###OPERAZIONE### con Eni Plenitude che ha tariffa pari ad A2A ma non richiede documentazione.
-
-Rimango in attesa di urgente riscontro, 
-Grazie e cordiali saluti`,
-      'AGENZIA': `Buongiorno, 
-
-piacere sono ###OPERATORE###, del servizio clienti di Billding, vi contatto per la richiesta di ###OPERAZIONE### di ###NOME_CLIENTE### in ###INDIRIZZO###. 
-
-Per completare la richiesta del cliente con A2A occorre un titolo di possesso dell'immobile: rogito, contratto d'affitto, o il certificato di registrazione all'agenzia delle entrate. 
-
-In alternativa, come soluzione equivalente, possiamo effettuare ###OPERAZIONE### con Eni Plenitude che ha tariffa pari ad A2A ma non richiede documentazione.
-
-Come procediamo? 
-Rimango in attesa di urgente riscontro, 
-
-Grazie e cordiali saluti`
-    };
-    let certVersion = null;
-    const certificateSection = document.getElementById('certificateSection');
-    const certInputs = {
-      '###NOME_CLIENTE###': document.getElementById('certCliente'),
-      '###AGENZIA###': document.getElementById('certAgenzia'),
-      '###OPERAZIONE###': document.getElementById('certOperazione'),
-      '###INDIRIZZO###': document.getElementById('certIndirizzo')
-    };
-    function composeCertificate() {
-      if (!certVersion) return '';
-      let result = certificati[certVersion].replaceAll('###OPERATORE###', state.operator || 'Daniele');
-      // Agenzia facoltativa: ometti il riferimento alla collaborazione se non selezionata.
-      if (certVersion === 'CLIENTE' && !certInputs['###AGENZIA###'].value.trim()) {
-        result = result.replace(', in collaborazione con ###AGENZIA###', '');
-      }
-      for (const [token, field] of Object.entries(certInputs)) {
-        // Evidenzia i campi da completare nella preview, ma non altera gli altri messaggi.
-        result = result.replaceAll(token, field.value.trim() || `[${token.slice(3,-3).replaceAll("_"," ")}]`);
-      }
-      return result;
-    }
-    function updateCertificate() {
-      if (!certVersion) return;
-      document.getElementById('certificateTitle').textContent = certVersion === 'CLIENTE' ? 'Versione per cliente' : 'Versione per agenzia';
-      document.getElementById('certificateText').textContent = composeCertificate();
-      const b = document.getElementById('certificateCopy');
-      b.textContent = '📋 Copia messaggio'; b.classList.remove('copied');
-    }
-    // Normalizzazione in tempo reale: iniziali maiuscole nel nome; prima lettera maiuscola nell'indirizzo.
-    const certCliente = certInputs['###NOME_CLIENTE###'];
-    const certIndirizzo = certInputs['###INDIRIZZO###'];
-    certCliente.addEventListener('input', () => {
-      const start = certCliente.selectionStart;
-      const end = certCliente.selectionEnd;
-      const normalized = certCliente.value.toLocaleLowerCase('it-IT').replace(/(^|[\s'’\-])([a-zà-öø-ÿ])/g, (match, sep, letter) => sep + letter.toLocaleUpperCase('it-IT'));
-      if (certCliente.value !== normalized) {
-        certCliente.value = normalized;
-        certCliente.setSelectionRange(start, end);
-      }
-      updateCertificate();
-    });
-    certIndirizzo.addEventListener('input', () => {
-      const start = certIndirizzo.selectionStart;
-      const end = certIndirizzo.selectionEnd;
-      const normalized = certIndirizzo.value.replace(/^(\s*)(\p{L})/u, (match, spaces, letter) => spaces + letter.toLocaleUpperCase('it-IT'));
-      if (certIndirizzo.value !== normalized) {
-        certIndirizzo.value = normalized;
-        certIndirizzo.setSelectionRange(start, end);
-      }
-      updateCertificate();
-    });
-    for (const key of ['###AGENZIA###', '###OPERAZIONE###']) {
-      certInputs[key].addEventListener('change', updateCertificate);
-    }
-    document.getElementById('certificateCopy').addEventListener('click', async () => {
-      const required = ['###NOME_CLIENTE###','###OPERAZIONE###','###INDIRIZZO###'];
-      const missing = required.filter(key => !certInputs[key].value.trim());
-      if (missing.length) {
-        alert('Completa prima i campi necessari al messaggio: ' + missing.map(x => x.replaceAll('#','').replaceAll('_',' ')).join(', '));
-        certInputs[missing[0]].focus();
-        return;
-      }
-      const txt = composeCertificate();
-      const btn = document.getElementById('certificateCopy');
-      try {
-        if (navigator.clipboard && window.isSecureContext) await navigator.clipboard.writeText(txt);
-        else {
-          const area = document.createElement('textarea'); area.value = txt;
-          area.style.position = 'fixed'; area.style.opacity = '0';
-          document.body.appendChild(area); area.select();
-          const ok = document.execCommand('copy'); area.remove();
-          if (!ok) throw new Error('Copia non consentita');
-        }
-        btn.textContent = '✅ Copiato!'; btn.classList.add('copied');
-      } catch(err) { btn.textContent = 'Copia non riuscita'; console.error(err); }
-    });
-
-    // Loghi fornitori forniti da Billding. In caso di errore rimane visibile il nome.
-    const loghi = {
-      ENEL: 'https://assets-billding.s3.eu-central-1.amazonaws.com/images/logos/enel/enel_logo.svg',
-      PLENITUDE: 'https://assets-billding.s3.eu-central-1.amazonaws.com/images/logos/plenitude/plenitude_logo.svg',
-      ILLUMIA: 'https://assets-billding.s3.eu-central-1.amazonaws.com/images/logos/illumia/logo+illumia.svg'
-    };
-
-    const state = { operator: null, category: null, option: null, suboption: null, thirdoption: null };
-    const operatorButtons = [...document.querySelectorAll('[data-operator]')];
-    const categoryButtons = [...document.querySelectorAll('[data-category]')];
-    const categorySection = document.getElementById('categorySection');
-    const options = document.getElementById('options');
-    const messages = document.getElementById('messages');
-    const secondSection = document.getElementById('secondSection');
-    const messagesSection = document.getElementById('messagesSection');
-    const suboptionSection = document.getElementById('suboptionSection');
-    const suboptions = document.getElementById('suboptions');
-    const thirdSection = document.getElementById('thirdSection');
-    const fourthSection = document.getElementById('fourthSection');
-    const fourthoptions = document.getElementById('fourthoptions');
-    const thirdoptions = document.getElementById('thirdoptions');
-    const messagesHeading = document.getElementById('messagesHeading');
-    const intro = document.getElementById('intro');
-
-    function chooseOperator(operator) {
-      state.operator = operator;
-      operatorButtons.forEach(button => {
-        const active = button.dataset.operator === operator;
-        button.classList.toggle('active',active);
-        button.setAttribute('aria-pressed',String(active));
-      });
-      categorySection.hidden = false;
-      intro.hidden = true;
-      if (state.category && state.option) {
-        let entry = catalogo[state.category][state.option];
-        if (state.suboption) entry = entry[state.suboption];
-        if (state.thirdoption) entry = entry[state.thirdoption];
-        if (Array.isArray(entry)) renderMessages(entry);
-      } // aggiorna nome nei messaggi
-      if (certVersion && state.category === 'CERTIFICATO') updateCertificate();
-    }
-
-    function chooseCategory(category) {
-      state.category = category;
-      state.option = null;
-      state.suboption = null;
-      state.thirdoption = null;
-      suboptionSection.hidden = true;
-      thirdSection.hidden = true;
-      categoryButtons.forEach(button => {
-        const active = button.dataset.category === category;
-        button.classList.toggle('active', active);
-        button.setAttribute('aria-pressed', String(active));
-      });
-      options.replaceChildren();
-      options.classList.toggle('ko', category === 'KO');
-      options.classList.toggle('questions', category === 'DOMANDE' || category === 'CHIUSURA CONVERSAZIONE');
-      certificateSection.hidden = true;
-      certVersion = null;
-      if (category === 'CERTIFICATO') {
-        document.getElementById('secondHeading').textContent = '03 — SELEZIONA DESTINATARIO';
-        for (const name of ['CLIENTE','AGENZIA']) {
-          const button = document.createElement('button');
-          button.type = 'button'; button.className = 'choice';
-          button.textContent = name === 'CLIENTE' ? '👤 CLIENTE' : '🏢 AGENZIA';
-          button.dataset.option = name;
-          button.addEventListener('click', () => {
-            state.option = name;
-            certVersion = name;
-            for (const b of options.children) {
-              const active = b === button; b.classList.toggle('active',active);
-              b.setAttribute('aria-pressed', String(active));
-            }
-            certificateSection.hidden = false;
-            updateCertificate();
-          });
-          options.appendChild(button);
-        }
-        secondSection.hidden = false;
-        messagesSection.hidden = true;
-        suboptionSection.hidden = true;
-        thirdSection.hidden = true;
-        fourthSection.hidden = true;
-        intro.hidden = true;
-        return;
-      }
-      const labels = { KO:'TIPOLOGIA KO', DOMANDE:'DOMANDA', 'CHIUSURA CONVERSAZIONE':'MESSAGGIO', FIRMA:'FORNITORE', PROMEMORIA:'FORNITORE' };
-      document.getElementById('secondHeading').textContent = '03 — SELEZIONA ' + labels[category];
-      for (const name of Object.keys(catalogo[category])) {
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.className = 'choice';
-        button.dataset.option = name;
-        if ((category === 'FIRMA' || category === 'PROMEMORIA') && loghi[name]) {
-          button.classList.add('supplier-choice');
-          const logo = document.createElement('img');
-          logo.className = 'supplier-logo';
-          logo.src = loghi[name];
-          logo.alt = '';
-          logo.loading = 'lazy';
-          logo.addEventListener('error', () => button.classList.add('logo-failed'));
-          const label = document.createElement('span');
-          label.className = 'supplier-label';
-          label.textContent = name;
-          button.append(logo,label);
-        } else {
-          button.textContent = name;
-        }
-        button.addEventListener('click', () => chooseOption(name));
-        options.appendChild(button);
-      }
-      secondSection.hidden = false;
-      messagesSection.hidden = true;
-      suboptionSection.hidden = true;
-      thirdSection.hidden = true;
-      fourthSection.hidden = true;
-      intro.hidden = true;
-    }
-
-    // Personalizza sia la presentazione che la firma, senza modificare il testo originale salvato.
-    function testoPerOperatore(testo) {
-      if (!testo) return '';
-      let risultato = testo.replace(/\b(Daniele|Armando|Claudio)\b/g, state.operator);
-      if (state.category === 'KO' && state.option === 'KO CREDITIZIO' && state.suboption) {
-        risultato = risultato.replaceAll('##NOME FORNITORE SCELTO#', state.suboption)
-          .replaceAll('###FORNITORE###', state.suboption);
-      }
-      return risultato;
-    }
-
-    function makeOptionButtons(container, entry, depth) {
-      container.replaceChildren();
-      for (const name of Object.keys(entry)) {
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.className = 'choice';
-        button.textContent = name;
-        button.dataset.suboption = name;
-        button.addEventListener('click', () => {
-          for (const other of container.children) {
-            const active = other === button;
-            other.classList.toggle('active', active);
-            other.setAttribute('aria-pressed', String(active));
-          }
-          if (depth === 1) {
-            state.suboption = name;
-            state.thirdoption = null;
-            thirdSection.hidden = true;
-            fourthSection.hidden = true;
-            const next = entry[name];
-            if (Array.isArray(next)) renderMessages(next);
-            else {
-              thirdSection.querySelector('.step').textContent = state.category === 'KO' && state.option === 'KO CREDITIZIO' ? '05 — SELEZIONA ESITO' : state.category === 'KO' && state.option === 'CARTA IDENTITÀ' ? '05 — SELEZIONA MESSAGGIO DOCUMENTO' : '05 — SELEZIONA SOLUZIONE';
-              makeOptionButtons(thirdoptions, next, 2);
-              thirdSection.hidden = false;
-              messagesSection.hidden = true;
-            }
-          } else if (depth === 2) {
-            state.thirdoption = name;
-            fourthSection.hidden = true;
-            const next = entry[name];
-            if (Array.isArray(next)) renderMessages(next);
-            else {
-              makeOptionButtons(fourthoptions, next, 3);
-              fourthSection.hidden = false;
-              messagesSection.hidden = true;
-            }
-          } else {
-            renderMessages(entry[name]);
-          }
-        });
-        container.appendChild(button);
-      }
-    }
-
-    function chooseOption(option) {
-      state.option = option;
-      state.suboption = null;
-      state.thirdoption = null;
-      thirdSection.hidden = true;
-      fourthSection.hidden = true;
-      for (const button of options.children) {
-        const active = button.dataset.option === option;
-        button.classList.toggle('active',active);
-        button.setAttribute('aria-pressed', String(active));
-      }
-      const entry = catalogo[state.category][option];
-      if (!Array.isArray(entry)) {
-        suboptionSection.querySelector('.step').textContent = state.category === 'KO' && option === 'KO CREDITIZIO' ? '04 — SELEZIONA FORNITORE' : state.category === 'KO' && option === 'IBAN' ? '04 — SELEZIONA TIPOLOGIA IBAN' : state.category === 'FIRMA' && option === 'PLENITUDE' ? '04 — SELEZIONA MESSAGGIO PLENITUDE' : state.category === 'KO' && option === 'CARTA IDENTITÀ' ? '04 — SELEZIONA CASISTICA DOCUMENTO' : state.category === 'KO' && option === 'OFFERTA NON OTTIMALE' ? '04 — SELEZIONA TIPOLOGIA OFFERTA' : '04 — SELEZIONA SOLUZIONE';
-        suboptions.classList.toggle('credit-providers', state.category === 'KO' && option === 'KO CREDITIZIO');
-        makeOptionButtons(suboptions, entry, 1);
-        suboptionSection.hidden = false;
-        messagesSection.hidden = true;
-      } else {
-        suboptionSection.hidden = true;
-        renderMessages(entry);
-      }
-    }
-
-    function renderMessages(items) {
-      messagesHeading.textContent = (!fourthSection.hidden ? '07' : state.thirdoption ? '06' : state.suboption ? '05' : '04') + ' — MESSAGGI DISPONIBILI';
-      messages.replaceChildren();
-      for (const item of items) {
-        const card = document.createElement('article');
-        card.className = 'message';
-        const title = document.createElement('h3');
-        title.textContent = item.titolo;
-        const testo = testoPerOperatore(item.testo);
-        if (testo) {
-          const body = document.createElement('p');
-          body.textContent = testo;
-          const actions = document.createElement('div');
-          actions.className = 'actions';
-          const copy = document.createElement('button');
-          copy.type = 'button';
-          copy.className = 'copy';
-          copy.textContent = '📋 Copia messaggio';
-          copy.addEventListener('click', async () => {
-            try {
-              if (navigator.clipboard && window.isSecureContext) {
-                await navigator.clipboard.writeText(testo);
-              } else {
-                const selection = document.createElement('textarea');
-                selection.value = testo;
-                selection.style.position = 'fixed';
-                selection.style.opacity = '0';
-                document.body.appendChild(selection);
-                selection.select();
-                const ok = document.execCommand('copy');
-                selection.remove();
-                if (!ok) throw new Error('Copia non consentita');
-              }
-              copy.textContent = '✅ Copiato!';
-              copy.classList.add('copied');
-            } catch (err) {
-              copy.textContent = 'Copia non riuscita';
-              console.error(err);
-            }
-          });
-          actions.appendChild(copy);
-          card.append(title,body,actions);
-        } else {
-          const empty = document.createElement('div');
-          empty.className = 'empty';
-          empty.textContent = 'Messaggio non ancora inserito.';
-          card.append(title,empty);
-        }
-        messages.appendChild(card);
-      }
-      messagesSection.hidden = false;
-    }
-
-    operatorButtons.forEach(button => button.addEventListener('click', () => chooseOperator(button.dataset.operator)));
-    categoryButtons.forEach(button => button.addEventListener('click', () => chooseCategory(button.dataset.category)));
-    document.getElementById('reset').addEventListener('click', () => {
-      state.operator = null;
-      state.category = null;
-      state.option = null;
-      state.suboption = null;
-      state.thirdoption = null;
-      certVersion = null;
-      certificateSection.hidden = true;
-      for (const field of Object.values(certInputs)) field.value = '';
-      suboptionSection.hidden = true;
-      thirdSection.hidden = true;
-      operatorButtons.forEach(button => { button.classList.remove('active'); button.setAttribute('aria-pressed','false'); });
-      categoryButtons.forEach(button => { button.classList.remove('active'); button.setAttribute('aria-pressed','false'); });
-      categorySection.hidden = true;
-      secondSection.hidden = true;
-      messagesSection.hidden = true;
-      intro.hidden = false;
-    });
-  </script>
+<main class="shell">
+<header class="top">
+  <div class="brand"><div class="brand-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 12h4l3-7 4 14 3-7h4"/></svg></div><div><div class="brand-name">Activity Tracker<span style="color:#6385d7">.</span></div><div class="brand-sub">Operations workspace</div></div></div>
+  <div class="clock"><div class="live"><span class="live-dot"></span>LIVE</div><div><div class="clock-time" id="clock">--:--</div><div class="clock-date" id="date"></div></div></div>
+</header>
+<section class="hero"><div><h1>Registra le tue attività.</h1></div><div class="segmented" role="group" aria-label="Periodo visualizzato"><button class="segment active" data-period="today" aria-pressed="true">Oggi</button><button class="segment" data-period="all" aria-pressed="false">Tutto lo storico</button></div></section>
+<section class="operations-section" aria-labelledby="actions-heading">
+ <div class="section-header"><h2 id="actions-heading">Registra attività</h2><div class="pause-wrap"><button type="button" id="card-pause" class="pause-button" aria-pressed="false" title="Registra una pausa"><svg viewBox="0 0 24 24"><path d="M9 5H6v14h3zM18 5h-3v14h3z"/></svg>Pausa <span class="pause-metric"><span class="pause-count" id="count-pause">0</span><span class="action-metric-label">Registrazioni</span></span><span class="pause-metric"><span class="pause-time" id="pause-time">0h 00m</span><span class="action-metric-label">Tempo</span></span></button><button class="tool end-button" id="end-day" type="button" disabled title="Interrompi il conteggio dell’attività in corso"><svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>Fine giornata</button></div></div>
+ <div class="active-strip" id="active-strip"><span class="active-context"><span class="running-dot"></span><span id="active-status">Nessuna attività in corso</span></span><strong id="active-name"></strong><span class="active-elapsed" id="active-elapsed"></span></div>
+ <div class="action-section"><div class="group-heading"><span class="group-marker support-marker"></span><h3>Attività principali</h3></div><div class="actions actions-primary" id="actions-primary"></div></div>
+ <div class="action-section"><div class="group-heading"><span class="group-marker insert-marker"></span><h3>Altre attività</h3></div><div class="actions actions-secondary" id="actions-secondary"></div></div>
+</section>
+<hr class="section-divider">
+<section class="overview" aria-label="Riepilogo attività">
+ <div class="metric"><div class="metric-label"><svg viewBox="0 0 24 24"><path d="M4 19V5m0 14h16M8 15v-3m5 3V8m5 7V5"/></svg>Attività totali</div><div class="metric-value" id="total">0</div><div class="metric-note" id="total-note">Nella giornata di oggi</div></div>
+ <div class="metric"><div class="metric-label"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M8 9h8m-8 5h8"/></svg>Inserimenti</div><div class="metric-value" id="insertions">0</div><div class="metric-note" id="insert-note">0% delle attività</div></div>
+ <div class="metric"><div class="metric-label"><svg viewBox="0 0 24 24"><path d="M4 13v-2a8 8 0 0 1 16 0v2M4 12H3v5h4v-5H4m16 0h1v5h-4v-5h3"/></svg>Supporto</div><div class="metric-value" id="support">0</div><div class="metric-note" id="support-note">0% delle attività</div></div>
+ <div class="metric"><div class="metric-label"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Ultima attività</div><div class="metric-value metric-last" id="last-action">Nessuna attività</div><div class="metric-note" id="last-time">Inizia premendo un pulsante</div></div>
+</section>
+<hr class="section-divider">
+<section class="analytics" aria-labelledby="analytics-heading">
+ <div class="analytics-header"><h2 id="analytics-heading">Analisi giornaliera</h2><label class="analytics-date-label" for="analytics-date">Giorno <input type="date" class="analytics-date" id="analytics-date"></label></div>
+ <div class="analytics-grid">
+  <article class="viz-card"><div class="viz-top"><h3 class="viz-title">Distribuzione attività</h3></div><p class="viz-sub" id="hist-sub">Tempo totale per attività</p><div class="histogram" id="histogram" role="group" aria-label="Istogramma giornaliero"></div></article>
+  <article class="viz-card"><h3 class="viz-title">Timeline operativa</h3><p class="viz-sub">09:00 – 19:00 · Una corsia per ogni attività</p><div class="timeline-scroll"><div class="timeline" id="timeline" role="group" aria-label="Timeline attività giornaliera"></div></div><div class="timeline-empty" id="timeline-empty" hidden>Nessuna attività registrata nella fascia 09:00–19:00.</div><p class="timeline-note">Ogni attività dura fino al clic successivo o a Fine giornata. La timeline mostra solo la fascia 09:00–19:00. Le attività storiche senza orario di fine noto non contribuiscono ai tempi.</p></article>
+ </div>
+ <p class="duration-hint">I tempi totali includono l’attività in corso e le pause. Il conteggio continua a pagina chiusa fino alla prossima registrazione o Fine giornata, senza proseguire nel giorno successivo.</p>
+</section>
+<hr class="section-divider">
+<section class="log-card" aria-labelledby="log-heading">
+ <div class="log-head"><div><h2 id="log-heading">Registro attività</h2><div class="log-sub" id="log-sub">0 registrazioni · Più recenti per prime</div></div><div class="log-tools">
+ <button class="tool" id="undo" title="Annulla l'ultima registrazione"><svg viewBox="0 0 24 24"><path d="M9 14 4 9l5-5M4 9h10a6 6 0 0 1 0 12"/></svg>Annulla ultimo</button>
+ <button class="tool danger" id="clear" title="Cancella le registrazioni del periodo selezionato"><svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3m3 0-1 13H7L6 7m4 4v5m4-5v5"/></svg>Azzera</button>
+ <button class="tool primary" id="export"><svg viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 16v4h16v-4"/></svg>Esporta CSV</button>
+ </div></div>
+ <div class="table-wrap" id="table-wrap" hidden><table><thead><tr><th scope="col">#</th><th scope="col">Orario</th><th scope="col">Attività</th><th scope="col">Categoria</th><th scope="col">Durata</th><th scope="col">Data</th><th scope="col" class="row-controls"><span class="sr-only">Elimina</span></th></tr></thead><tbody id="log-body"></tbody></table></div>
+ <div class="empty" id="empty"><div class="empty-icon"><svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="16" rx="2"/><path d="M9 8h6m-6 4h6m-6 4h3"/></svg></div><strong>Il tuo registro è ancora vuoto</strong><span>Premi un pulsante per registrare la prima attività.</span></div>
+</section>
+<footer class="footer"><div class="storage-status" id="storage-status"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4"/></svg><span id="storage-text">Salvataggio automatico su questo browser</span></div><span>Activity Tracker · Operations</span></footer>
+</main>
+<dialog id="edit-dialog" aria-labelledby="edit-title">
+ <form id="edit-form">
+  <h2 id="edit-title">Modifica orario</h2><p id="edit-description"></p>
+  <label for="edit-time">Nuovo orario</label><input type="time" id="edit-time" required step="60">
+  <div class="dialog-buttons"><button type="button" class="tool" id="edit-cancel">Annulla</button><button type="submit" class="tool primary">Salva modifica</button></div>
+ </form>
+</dialog>
+<div class="toast" id="toast" role="status" aria-live="polite"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></svg><span id="toast-text"></span></div>
+<div id="announce" class="sr-only" aria-live="polite"></div>
+<script>
+'use strict';
+const defs=[
+ {id:'insertion',label:'Inserimento',group:'Inserimento',color:'#315fce',tint:'#eaf0ff',icon:'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8m-8 4h8m-8 4h5"/>'},
+ {id:'verification',legacy:true,label:'Verifica stato pratica',group:'Verifica',color:'#6b49c6',tint:'#f0ebff',icon:'<circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5m-13-10 2 2 4-4"/>'},
+ {id:'consultant',label:'Supporto Consulente',group:'Supporto',color:'#087f75',tint:'#e4f6f2',icon:'<path d="M4 13v-2a8 8 0 0 1 16 0v2M4 12H3v5h4v-5H4m16 0h1v5h-4v-5h3m0 5a4 4 0 0 1-4 4h-3"/>'},
+ {id:'backoffice',label:'Supporto Back Office',group:'Supporto',color:'#a96514',tint:'#fff3df',icon:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V4h8v3M3 12h18m-11 0v2h4v-2"/>'},
+ {id:'tech',label:'Ops/Tech',group:'Supporto',color:'#be4676',tint:'#fcebf3',icon:'<path d="m8 6-6 6 6 6m8-12 6 6-6 6M14 4l-4 16"/>'},
+ {id:'agency',label:'Supporto Agenzie',group:'Supporto',color:'#5365a8',tint:'#edf0fc',icon:'<path d="M3 21h18M5 21V7l7-4 7 4v14M9 10h1m4 0h1m-6 4h1m4 0h1m-4 7v-3h2v3"/>'},
+ {id:'customer',label:'Supporto Cliente',group:'Supporto',color:'#267bba',tint:'#e9f5ff',icon:'<circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/>'},
+ {id:'pause',label:'Pausa',group:'Pausa',color:'#8491a5',tint:'#edf0f5',icon:'<path d="M9 5H6v14h3zM18 5h-3v14h3z"/>'}
+];
+const END='__end';
+const byId=Object.fromEntries(defs.map(x=>[x.id,x]));
+byId[END]={id:END,label:'Fine giornata',group:'Chiusura',color:'#64748b'};
+const $=id=>document.getElementById(id);
+const KEY='operations-activity-tracker-v1';
+const dayKey=d=>{d=new Date(d);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
+const timeFmt=new Intl.DateTimeFormat('it-IT',{hour:'2-digit',minute:'2-digit',hourCycle:'h23'});
+const clockFmt=timeFmt;
+const dateFmt=new Intl.DateTimeFormat('it-IT',{day:'2-digit',month:'2-digit',year:'numeric'});
+const longDateFmt=new Intl.DateTimeFormat('it-IT',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+const numFmt=new Intl.NumberFormat('it-IT');
+let logs=[],period='today',lastDay=dayKey(new Date()),toastTimer,durationCells=new Map();
+function storageState(ok){$('storage-status').classList.toggle('error',!ok);$('storage-text').textContent=ok?'Salvataggio automatico su questo browser':'Salvataggio locale non disponibile: esporta il CSV prima di chiudere.';}
+function load(){try{const raw=localStorage.getItem(KEY);const value=raw?JSON.parse(raw):[];if(!Array.isArray(value))throw new Error('Dati non validi');logs=value.map(x=>x&&(x.action==='fast'||x.action==='slow')?{...x,legacyAction:x.action,action:'insertion'}:x).filter(x=>x&&Object.hasOwn(byId,x.action)&&typeof x.ts==='number'&&Number.isFinite(new Date(x.ts).getTime()));storageState(true);}catch(e){storageState(false);}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(logs));storageState(true);}catch(e){storageState(false);}}
+function toast(message){$('toast-text').textContent=message;$('toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('show'),2400);}
+function visibleLogs(){return period==='all'?logs:logs.filter(x=>dayKey(x.ts)===dayKey(new Date()));}
+function cell(row,text,cls){const td=document.createElement('td');td.textContent=text;if(cls)td.className=cls;row.append(td);return td;}
+// Durations are derived from the chronologically ordered events, not stored independently.
+function calculate(entries,now=Date.now()){
+ const sorted=[...entries].sort((a,b)=>a.ts-b.ts),durations=new Map();
+ const stats=Object.fromEntries(defs.map(d=>[d.id,{count:0,total:0,unknown:0}]));
+ let active=null,total=0,count=0;
+ for(let i=0;i<sorted.length;i++){
+  const e=sorted[i];if(e.action===END)continue;
+  const st=stats[e.action];st.count++;count++;
+  const next=sorted[i+1];let finish=null,running=false;
+  if(next&&dayKey(next.ts)===dayKey(e.ts))finish=next.ts;
+  else if(dayKey(e.ts)===dayKey(now)&&e.ts<=now){finish=now;running=true;active=e;}
+  if(finish===null){st.unknown++;durations.set(e,{ms:null,end:null,running:false});continue;}
+  const ms=Math.max(0,finish-e.ts);st.total+=ms;total+=ms;
+  durations.set(e,{ms,end:finish,running});
+ }
+ return {sorted,durations,stats,active,total,count};
+}
+function durationText(ms){if(ms==null)return '—';if(ms===0)return '0 min';if(ms<60000)return '<1 min';const m=Math.floor(ms/60000),h=Math.floor(m/60);return h?`${h}h ${String(m%60).padStart(2,'0')}m`:`${m} min`;}
+const share=(n,total)=>total?Math.round(100*n/total):0;
+function hoursMinutes(ms){const m=Math.floor(ms/60000);return `${Math.floor(m/60)}h ${String(m%60).padStart(2,'0')}m`;}
+function updateTimeStats(now=Date.now()){
+ const data=calculate(visibleLogs(),now),today=calculate(logs.filter(e=>dayKey(e.ts)===dayKey(now)),now),{stats,total,count}=data;
+ for(const d of defs.filter(d=>!d.legacy)){const st=stats[d.id];$('count-'+d.id).textContent=numFmt.format(st.count);if(d.id==='pause'){$('pause-time').textContent=hoursMinutes(st.total);$('card-pause').title=`Pausa · Tempo totale: ${hoursMinutes(st.total)}`;continue;}
+  $('time-'+d.id).textContent=hoursMinutes(st.total);$('card-'+d.id).classList.toggle('is-running',today.active?.action===d.id);
+ }
+ const ins=stats.insertion.count,insTime=stats.insertion.total;
+ const support=defs.filter(d=>d.group==='Supporto').reduce((a,d)=>a+stats[d.id].count,0),supportTime=defs.filter(d=>d.group==='Supporto').reduce((a,d)=>a+stats[d.id].total,0);
+ $('total').textContent=numFmt.format(count);$('insertions').textContent=numFmt.format(ins);$('support').textContent=numFmt.format(support);
+ $('total-note').textContent=`${period==='today'?'Oggi':'Storico'} · ${hoursMinutes(total)} rilevati`;
+ $('insert-note').textContent=`${share(ins,count)}% azioni · ${hoursMinutes(insTime)}`;
+ $('support-note').textContent=`${share(support,count)}% azioni · ${hoursMinutes(supportTime)}`;
+ for(const [e,td] of durationCells){const d=data.durations.get(e);td.textContent=e.action===END?'—':d?.ms==null?'Non nota':durationText(d.ms)+(d.running?' · In corso':'');td.classList.toggle('running',Boolean(d?.running));}
+ const active=today.active,last=today.sorted.at(-1);$('active-strip').classList.toggle('running',!!active);$('active-status').textContent=active?'In corso · dalle '+timeFmt.format(active.ts):last?.action===END?'Giornata conclusa alle '+timeFmt.format(last.ts):'Nessuna attività in corso';$('active-name').textContent=active?byId[active.action].label:'';$('active-elapsed').textContent=active?durationText(now-active.ts):'';$('end-day').disabled=!active;$('card-pause').setAttribute('aria-pressed',String(active?.action==='pause'));
+}
+function render(){
+ const visible=visibleLogs(),ordered=[...visible].sort((a,b)=>a.ts-b.ts),latest=ordered.at(-1);
+ $('last-action').textContent=latest?byId[latest.action].label:'Nessuna attività';$('last-time').textContent=latest?`${timeFmt.format(latest.ts)} · ${dateFmt.format(latest.ts)}`:'Inizia premendo un pulsante';
+ const n=visible.filter(e=>e.action!==END).length;$('log-sub').textContent=`${numFmt.format(n)} ${n===1?'registrazione':'registrazioni'} · Più recenti per prime`;
+ $('empty').hidden=visible.length>0;$('table-wrap').hidden=visible.length===0;$('undo').disabled=visible.length===0;$('clear').disabled=visible.length===0;$('export').disabled=visible.length===0;
+ const fragment=document.createDocumentFragment();durationCells=new Map();
+ for(let i=ordered.length-1;i>=0;i--){const entry=ordered[i],def=byId[entry.action],row=document.createElement('tr');if(entry.action===END)row.className='end-row';cell(row,String(i+1).padStart(2,'0'),'id-cell');const timeCell=cell(row,'','time-cell'),timeWrap=document.createElement('span');timeWrap.className='time-wrap';timeWrap.append(document.createTextNode(timeFmt.format(entry.ts)),rowButton('edit','Modifica orario',()=>openEdit(entry)));timeCell.append(timeWrap);const td=cell(row,''),tag=document.createElement('span');tag.className='action-tag';tag.style.setProperty('--accent',def.color);const dot=document.createElement('span');dot.className='tag-dot';dot.setAttribute('aria-hidden','true');tag.append(dot,document.createTextNode(def.label));td.append(tag);cell(row,def.group,'category-cell');durationCells.set(entry,cell(row,'','duration-cell'));cell(row,dateFmt.format(entry.ts),'date-cell');const controls=cell(row,'','row-controls');controls.append(rowButton('delete','Elimina registrazione',()=>removeEntry(entry)));fragment.append(row);}
+ $('log-body').replaceChildren(fragment);updateTimeStats();renderAnalytics();
+}
+const rowIcons={edit:'<path d="m14 5 5 5M4 20l4-1 12-12a2 2 0 0 0-3-3L5 16l-1 4Z"/>',delete:'<path d="M4 7h16M9 7V4h6v3m3 0-1 13H7L6 7m4 4v5m4-5v5"/>'};
+function rowButton(type,label,handler){const b=document.createElement('button');b.type='button';b.className='row-button '+type;b.title=label;b.setAttribute('aria-label',label);b.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true">'+rowIcons[type]+'</svg>';b.addEventListener('click',handler);return b;}
+function removeEntry(entry){const index=logs.indexOf(entry);if(index<0)return;logs.splice(index,1);save();render();toast('Registrazione eliminata');}
+let editing=null;
+function openEdit(entry){editing=entry;$('edit-description').textContent=byId[entry.action].label+' · '+dateFmt.format(entry.ts);$('edit-time').value=timeFmt.format(entry.ts);$('edit-dialog').showModal();$('edit-time').focus();}
+$('edit-cancel').addEventListener('click',()=>$('edit-dialog').close());
+$('edit-dialog').addEventListener('close',()=>{editing=null;});
+$('edit-form').addEventListener('submit',e=>{e.preventDefault();if(!editing||!logs.includes(editing)){$('edit-dialog').close();return;}const [h,m]=$('edit-time').value.split(':').map(Number);if(!Number.isInteger(h)||!Number.isInteger(m)||h<0||h>23||m<0||m>59)return;const date=new Date(editing.ts);date.setHours(h,m,0,0);if(date.getTime()>Date.now()){toast('Non puoi impostare un orario futuro');return;}editing.ts=date.getTime();save();render();$('edit-dialog').close();toast('Orario aggiornato');});
+function register(action){logs.push({action,ts:Date.now()});save();render();const card=$('card-'+action);card.classList.remove('flash');void card.offsetWidth;card.classList.add('flash');setTimeout(()=>card.classList.remove('flash'),350);toast(byId[action].label+' · Registrato');}
+const primaryActions=['consultant','customer','tech'];
+const secondaryActions=['insertion','backoffice','agency'];
+for(const def of [...primaryActions,...secondaryActions].map(id=>byId[id])){
+ const card=document.createElement('button');card.type='button';card.className='action-card';card.id='card-'+def.id;card.style.setProperty('--accent',def.color);card.style.setProperty('--tint',def.tint);card.setAttribute('aria-label',`Registra ${def.label.toLowerCase()}`);
+ card.innerHTML=`<span class="action-button"><span class="action-icon" aria-hidden="true"><svg viewBox="0 0 24 24">${def.icon}</svg></span><span class="action-plus" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span><span class="action-title">${def.label}</span><span class="action-group">${def.group}</span></span><span class="counter"><span class="count" id="count-${def.id}" title="Numero di attività">0</span><span class="action-metric-label">Registrazioni</span></span><span class="action-times"><strong id="time-${def.id}" title="Tempo totale">0h 00m</strong><span class="action-metric-label">Tempo</span></span>`;
+ card.addEventListener('click',()=>register(def.id));$(primaryActions.includes(def.id)?'actions-primary':'actions-secondary').append(card);
+}
+$('card-pause').addEventListener('click',()=>register('pause'));
+$('end-day').addEventListener('click',()=>{const now=Date.now();if(!calculate(logs.filter(e=>dayKey(e.ts)===dayKey(now)),now).active)return;logs.push({action:END,ts:now});save();render();toast('Giornata conclusa · Timer fermato');});
+const chartGroups=[['insertion'],['customer','consultant','backoffice','agency'],['tech'],['pause']];
+const chartDefs=chartGroups.flat().map(id=>byId[id]);
+const chartColumns={insertion:1,customer:3,consultant:4,backoffice:5,agency:6,tech:8,pause:10};
+const chartGroupStarts=new Set(chartGroups.slice(1).map(group=>group[0]));
+const histLabels={insertion:['Inserimento'],consultant:['Supporto','Consulente'],backoffice:['Supporto','Back','Office'],agency:['Supporto','Agenzie'],customer:['Supporto','Cliente'],tech:['Ops/Tech'],pause:['Pausa']};
+$('analytics-date').value=lastDay;
+$('analytics-date').max=lastDay;
+$('analytics-date').addEventListener('change',renderAnalytics);
+function renderAnalytics(){
+ const selected=$('analytics-date').value||dayKey(new Date()),daily=logs.filter(x=>dayKey(x.ts)===selected),data=calculate(daily),{stats}=data;
+ const total=chartDefs.reduce((sum,d)=>sum+stats[d.id].total,0),max=Math.max(1,...chartDefs.map(d=>stats[d.id].total));
+ $('hist-sub').textContent=`${hoursMinutes(total)} · Tempo totale per attività`+(stats.verification.count?' · Verifiche precedenti conservate nei log':'');
+ const bars=document.createDocumentFragment();
+ for(const d of chartDefs){const n=stats[d.id].total,col=document.createElement('div');col.className='hist-col';col.style.gridColumn=chartColumns[d.id];col.style.setProperty('--bar',d.color);const label=hoursMinutes(n);col.title=`${d.label}: ${label}`;col.innerHTML=`<div class="hist-plot"><span class="hist-count"></span><div class="hist-bar" style="height:${n?Math.max(2,n/max*64):0}px"></div></div><span class="hist-label">${histLabels[d.id].map(part=>`<span>${part}</span>`).join('')}</span>`;col.querySelector('.hist-count').textContent=label;bars.append(col);}
+ $('histogram').replaceChildren(bars);renderTimeline(data,selected);
+}
+function renderTimeline(data,selected){
+ const daily=data.sorted;
+ const start=new Date(selected+'T09:00:00').getTime(),end=new Date(selected+'T19:00:00').getTime(),now=Date.now(),today=selected===dayKey(now),span=end-start;
+ const pos=t=>Math.max(0,Math.min(100,(t-start)/span*100));
+ const grid=document.createDocumentFragment(),blank=document.createElement('span'),axis=document.createElement('div');axis.className='timeline-axis';
+ for(let h=9;h<=19;h++){const tick=document.createElement('span');tick.className='axis-tick';tick.style.left=(h-9)*10+'%';tick.textContent=String(h).padStart(2,'0');axis.append(tick);}grid.append(blank,axis);
+ let shown=0;
+ for(const d of chartDefs){const label=document.createElement('div');label.className='timeline-label';label.style.setProperty('--bar',d.color);label.innerHTML=`<i></i>${d.label}`;const track=document.createElement('div');track.className='timeline-track';if(chartGroupStarts.has(d.id)){label.classList.add('group-start');track.classList.add('group-start');}track.setAttribute('aria-label',d.label);track.style.setProperty('--bar',d.color);
+  for(let i=0;i<daily.length;i++){const e=daily[i];if(e.action!==d.id)continue;const duration=data.durations.get(e);const next=duration?.end??e.ts;if(e.ts>end||next<start)continue;const a=Math.max(start,e.ts),b=Math.min(end,Math.max(e.ts,next));if(b<a)continue;shown++;const block=document.createElement('span');block.className='timeline-block';const left=pos(a),width=pos(b)-left;block.style.left=left===100?'calc(100% - 3px)':left+'%';block.style.width=width+'%';block.title=`${d.label} · ${timeFmt.format(a)}${b>a?' – '+timeFmt.format(b)+' · '+durationText(duration?.ms):duration?.ms==null?' · fine non nota':' · registrazione'}`;track.append(block);}
+  if(today&&now>=start&&now<=end){const marker=document.createElement('span');marker.className='timeline-now';marker.style.left=pos(now)+'%';marker.title='Ora corrente';track.append(marker);}grid.append(label,track);
+ }
+ $('timeline').replaceChildren(grid);$('timeline-empty').hidden=shown>0;
+}
+let lastVizMinute='',lastTimerSecond=-1;
+function updateClock(){const now=new Date();$('clock').textContent=clockFmt.format(now);$('date').textContent=longDateFmt.format(now);const today=dayKey(now);if(today!==lastDay){const wasToday=$('analytics-date').value===lastDay;lastDay=today;$('analytics-date').max=today;if(wasToday)$('analytics-date').value=today;render();}const second=Math.floor(now.getTime()/1000);if(second!==lastTimerSecond){lastTimerSecond=second;const active=calculate(logs.filter(e=>dayKey(e.ts)===today),now.getTime()).active;if(active)$('active-elapsed').textContent=durationText(now.getTime()-active.ts);}const minute=today+' '+timeFmt.format(now);if(minute!==lastVizMinute){lastVizMinute=minute;updateTimeStats(now.getTime());renderAnalytics();}}
+document.querySelectorAll('[data-period]').forEach(b=>b.addEventListener('click',()=>{period=b.dataset.period;document.querySelectorAll('[data-period]').forEach(x=>{const active=x===b;x.classList.toggle('active',active);x.setAttribute('aria-pressed',String(active));});render();}));
+$('undo').addEventListener('click',()=>{const entry=visibleLogs().at(-1);if(!entry)return;const i=logs.lastIndexOf(entry);if(i>=0)logs.splice(i,1);save();render();toast('Ultima registrazione annullata');});
+$('clear').addEventListener('click',()=>{const current=visibleLogs();if(!current.length)return;const message=period==='today'?`Cancellare le ${current.length} registrazioni di oggi? Lo storico degli altri giorni verrà conservato.`:`Cancellare definitivamente tutte le ${current.length} registrazioni dello storico?`;if(!window.confirm(message))return;const removing=new Set(current);logs=logs.filter(x=>!removing.has(x));save();render();toast('Registro azzerato');});
+$('export').addEventListener('click',()=>{const current=visibleLogs();if(!current.length)return;const quote=v=>'"'+String(v).replace(/"/g,'""')+'"';const data=calculate(current);const rows=[['Numero','Data','Orario','Attività','Categoria','Durata (minuti)','Stato durata'],...data.sorted.map((entry,i)=>{const d=data.durations.get(entry);return [i+1,dateFmt.format(entry.ts),timeFmt.format(entry.ts),byId[entry.action].label,byId[entry.action].group,d?.ms==null?'':(d.ms/60000).toFixed(2).replace('.',','),entry.action===END?'Chiusura':d?.running?'In corso':d?.ms==null?'Non nota':'Conclusa'];})];const csv='\uFEFF'+rows.map(row=>row.map(quote).join(';')).join('\r\n');const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));const a=document.createElement('a');a.href=url;a.download=`attivita-${period==='today'?dayKey(new Date()):'storico'}.csv`;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('CSV esportato');});
+window.addEventListener('storage',e=>{if(e.key===KEY||e.key===null){load();render();}});
+load();updateClock();render();setInterval(updateClock,250);
+</script>
 </body>
 </html>
